@@ -1,3 +1,7 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
-# Create your views here.
+def add_meal(request):
+    context = {}
+    # return render(request, '<app name>/index.html', context)
+    return HttpResponse(status=204)

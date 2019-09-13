@@ -1,0 +1,57 @@
+{% load static %}
+<html>
+    <head>
+        <title>Django Girls blog</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Meals</title>
+    
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'FitAFSite/css/index.css' %}">
+    </head>
+    <body>
+        <div id='app' class='container'>
+            <div class="meal-in">
+                <div id='calorie-in'>
+                    <div>
+                        <input 
+                        v-model:value='meal' 
+                        type="text" 
+                        placeholder='food name'>
+                    </div>
+                    <div>
+                        <input 
+                        v-model:value='cal_in' 
+                        type="text" 
+                        placeholder='calorie count'>
+                    </div>
+                    <div>
+                        <button
+                        v-on:click='addTodo'
+                        id='btn-add'
+                        >
+                        <i class='fas fa-plus'></i>                    
+                    </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content container">
+            <div class="row">
+                <div class="col-md-8">
+                    {% block calorie_list %}
+                    {% endblock calorie_list %}
+                </div>
+            </div>
+        </div>
+        
+        {% block main_scripts %}
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="{% static 'FitAFSite/js/index.js' %}"></script>
+        {% endblock main_scripts %}
+        
+        {% block extra_scripts %}
+        {% endblock extra_scripts %}
+    </body>
+</html>

@@ -12,23 +12,28 @@ const app = new Vue({
     },
     methods: {
         addMeal: async function() {
-            const response = await axios.post('api/add_meal/', {title: this.meal, calories: this.cal_in})
+            const response = await axios.post('api/meal/', {title: this.meal, calories: this.cal_in})
             console.log(response)
-            // // add todo to this.todos
-            // this.todos.push({text: this.todo, completed: false})
+            // // add meal to this.meals
+            // this.meals.push({text: this.meal, completed: false})
             this.meal = ''
+            this.cal_in = ''
+            this.getMeal()
         },
         removeMeal: async function(index) {
-            const response = await axios.delete(`/api/remove_meal/${this.todos[index].pk}/`)
+            const response = await axios.delete(`api/meal/${this.meals[index].pk}/`)
             console.log(response)            
-            // remove todo from this.todos
-            // this.todos.splice(index, 1)
+            // remove meal from this.meals
+            // this.meals.splice(index, 1)
+            this.getMeal()
         },
+        getMeal: async function() {
+            const response = await axios.get('api/meal/')
+            this.meals = response.data
+            // this.owner = this.meal[0].owner
+        }
     },
     mounted: function() {
-        // mounted() handles any logic you want prior to the vue app mounting
-        // this is a good place to request any data you want to render, such as from localStorage (what we're doing here), or from an API call
-    },
-    computed: {
-    },
+        this.getMeal()
+    }
 });

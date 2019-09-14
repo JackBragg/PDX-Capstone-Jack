@@ -4,7 +4,7 @@ from django.utils import timezone
 
 
 class Meal(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL,blank=True, null=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, blank=True, null=True)
     carb = models.IntegerField(blank=True, null=True)
     fat = models.IntegerField(blank=True, null=True)

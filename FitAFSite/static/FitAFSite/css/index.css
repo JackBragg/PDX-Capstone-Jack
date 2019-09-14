@@ -110,7 +110,7 @@ i:hover {
   opacity: 0.6;
 }
 
-.meal {
+.meal-list {
   max-height: 400px;
   min-width: 100px;
   color: blue;

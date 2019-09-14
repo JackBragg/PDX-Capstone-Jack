@@ -1,7 +1,7 @@
 {% load static %}
 <html>
     <head>
-        <title>Django Girls blog</title>
+        <title>Fit AF MFer</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>Meals</title>
@@ -10,37 +10,54 @@
         <link rel="stylesheet" href="{% static 'FitAFSite/css/index.css' %}">
     </head>
     <body>
-        <div id='app' class='container'>
-            <div class="meal-in">
-                <div id='calorie-in'>
-                    <div>
-                        <input 
-                        v-model:value='meal' 
-                        type="text" 
-                        placeholder='food name'>
-                    </div>
-                    <div>
-                        <input 
-                        v-model:value='cal_in' 
-                        type="text" 
-                        placeholder='calorie count'>
-                    </div>
-                    <div>
-                        <button
-                        v-on:click='addTodo'
-                        id='btn-add'
-                        >
-                        <i class='fas fa-plus'></i>                    
-                    </button>
+        <div id='app'>
+            <div class=''>
+                <div class="meal-in">
+                    <div id='calorie-in'>
+                        <div>
+                            <input 
+                                v-model:value='meal' 
+                                type="text" 
+                                placeholder='food name'>
+                        </div>
+                        <div>
+                            <input 
+                                v-model:value='cal_in' 
+                                type="text" 
+                                placeholder='calorie count'>
+                        </div>
+                        <div>
+                            <button
+                                v-on:click='addMeal'
+                                id='btn-add'
+                            >
+                            <i class='fas fa-plus'></i>                    
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="content container">
-            <div class="row">
-                <div class="col-md-8">
-                    {% block calorie_list %}
-                    {% endblock calorie_list %}
+            <div class="" style='border: 10px solid blue; min-height:200px;'>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div>
+                            <div class='meal-list'>
+                                <ul>
+                                    <li
+                                        v-for="meal, i in meals"
+                                        v-bind:key="i"
+                                    >
+                                        <span> ${ meal.title } </span>
+                                        <div class='control-buttons'>
+                                            <i v-on:click='removeMeal(i)'
+                                                class='fas fa-times'
+                                            ></i>
+                                        </div>    
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

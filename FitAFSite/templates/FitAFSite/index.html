@@ -10,52 +10,54 @@
         <link rel="stylesheet" href="{% static 'FitAFSite/css/index.css' %}">
     </head>
     <body>
-        <div id='app'>
-            <div class=''>
-                <div class="meal-in">
-                    <div id='calorie-in'>
-                        <div>
-                            <input 
-                                v-model:value='meal' 
-                                type="text" 
-                                placeholder='food name'>
-                        </div>
-                        <div>
-                            <input 
-                                v-model:value='cal_in' 
-                                type="text" 
-                                placeholder='calorie count'>
-                        </div>
-                        <div>
-                            <button
-                                v-on:click='addMeal'
-                                id='btn-add'
-                            >
-                            <i class='fas fa-plus'></i>                    
-                            </button>
-                        </div>
-                    </div>
+        <div id='app' style='width:100%;'>
+            <div class="meal-in">
+                <div class='meal-input-field'>
+                    <input 
+                        v-model:value='meal' 
+                        type="text" 
+                        placeholder='food name'>
+                </div>
+                <div class='meal-input-field'>
+                    <input 
+                        v-model:value='cal_in' 
+                        type="text" 
+                        placeholder='calorie count'>
+                </div>
+                <div>
+                    <button
+                        v-on:click='addMeal'
+                        id='btn-add'
+                    >
+                    <i class='fas fa-plus'></i>                    
+                    </button>
                 </div>
             </div>
-            <div class="" style='border: 10px solid blue; min-height:200px;'>
+            <div class="meal-log">
                 <div class="row">
                     <div class="col-md-8">
                         <div>
-                            <div class='meal-list'>
-                                <ul>
-                                    <li
-                                        v-for="meal, i in meals"
-                                        v-bind:key="i"
-                                    >
-                                        <span> ${ meal.title } </span>
-                                        <div class='control-buttons'>
-                                            <i v-on:click='removeMeal(i)'
-                                                class='fas fa-times'
-                                            ></i>
-                                        </div>    
-                                    </li>
-                                </ul>
-                            </div>
+                            <ul>
+                                <li
+                                    v-for="meal, i in meals"
+                                    v-bind:key="i"
+                                >
+                                    <span> ${ meal.title } </span>
+                                    <span class="left-brdr">Calories: ${ meal.calorie }</span>
+                                    <div class='control-buttons left-brdr'>
+                                        <i v-on:click='removeMeal(i)'
+                                            class='fas fa-times'
+                                        ></i>
+                                    </div>    
+                                </li>
+                            </ul>
+                            <ul>
+
+                                <li>
+                                    <span> Total Calories </span>
+                                    <span class="left-brdr">${ cal_tot }</span>  
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,9 @@
+# api/meal/
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from .models import Meal
+from django.utils import timezone
+from datetime import datetime, timedelta
 import json
 
 def meal(request):
@@ -20,7 +23,8 @@ def meal(request):
             return HttpResponse(status=201)        
 
         # filter by meals by user
-        meals = Meal.objects.all().order_by('-created_date')
+        today = timezone.now().replace(hour=0, minute=0, second=0)
+        meals = Meal.objects.filter(created_date__gte=(today)).order_by('-created_date')
         #meals = Meal.objects.filter(owner=request.user).order_by('-created_date')
         meal_list = []
         for meal in meals:

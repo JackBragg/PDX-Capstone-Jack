@@ -5,6 +5,7 @@ const app = new Vue({
     el: '#app',
     delimiters: ['${', '}'], // set custom delimiters here instead of {{}}    
     data: {
+        cal_tot: 0,
         meals: [],
         meal: '',
         owner: '',
@@ -12,6 +13,10 @@ const app = new Vue({
     },
     methods: {
         addMeal: async function() {
+            this.cal_in = Number(this.cal_in)
+            if (this.cal_tot) {
+                this.cal_tot += this.cal_in
+            }
             const response = await axios.post('api/meal/', {title: this.meal, calories: this.cal_in})
             console.log(response)
             // // add meal to this.meals
@@ -30,10 +35,16 @@ const app = new Vue({
         getMeal: async function() {
             const response = await axios.get('api/meal/')
             this.meals = response.data
+            if (!this.cal_tot) {
+                for (meal in this.meals) {
+                    this.cal_tot += Number(this.meals[meal].calorie)
+                }
+            }
             // this.owner = this.meal[0].owner
         }
     },
     mounted: function() {
+        this.cal_tot = 0
         this.getMeal()
     }
 });

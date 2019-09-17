@@ -1,76 +1,71 @@
+{% extends "base.html" %}
 {% load static %}
-<html>
-    <head>
-        <title>Fit AF MFer</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Meals</title>
-    
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
-        <link rel="stylesheet" href="{% static 'FitAFSite/css/index.css' %}">
-    </head>
-    <body>
-        <div id='app' style='width:100%;'>
-            <div class="meal-in">
-                <div class='meal-input-field'>
-                    <input 
-                        v-model:value='meal' 
-                        type="text" 
-                        placeholder='food name'>
-                </div>
-                <div class='meal-input-field'>
-                    <input 
-                        v-model:value='cal_in' 
-                        type="text" 
-                        placeholder='calorie count'>
-                </div>
-                <div>
-                    <button
-                        v-on:click='addMeal'
-                        id='btn-add'
-                    >
-                    <i class='fas fa-plus'></i>                    
-                    </button>
-                </div>
-            </div>
-            <div class="meal-log">
-                <div class="row">
-                    <div class="col-md-8">
-                        <div>
-                            <ul>
-                                <li
-                                    v-for="meal, i in meals"
-                                    v-bind:key="i"
-                                >
-                                    <span> ${ meal.title } </span>
-                                    <span class="left-brdr">Calories: ${ meal.calorie }</span>
-                                    <div class='control-buttons left-brdr'>
-                                        <i v-on:click='removeMeal(i)'
-                                            class='fas fa-times'
-                                        ></i>
-                                    </div>    
-                                </li>
-                            </ul>
-                            <ul>
 
-                                <li>
-                                    <span> Total Calories </span>
-                                    <span class="left-brdr">${ cal_tot }</span>  
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+{% block title %}
+  Meals
+{% endblock title %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'FitAFSite/css/index.css' %}">
+{% endblock extra_styles %}
+
+{% block content %}
+<div id='app' style='width:100%;'>
+  <div class="meal-in">
+    <div class='meal-input-field'>
+      <input 
+      v-model:value='meal' 
+      type="text" 
+      placeholder='food name'>
+    </div>
+    <div class='meal-input-field'>
+      <input 
+      v-model:value='cal_in' 
+      type="text" 
+      placeholder='calorie count'>
+    </div>
+    <div>
+      <button
+      v-on:click='addMeal'
+      id='btn-add'
+      >
+      <i class='fas fa-plus'></i>                    
+    </button>
+  </div>
+</div>
+<div class="meal-log">
+  <div class="row">
+    <div class="col-md-8">
+      <div>
+        <ul>
+          <li
+          v-for="meal, i in meals"
+          v-bind:key="i"
+          >
+          <span> ${ meal.title } </span>
+          <span class="left-brdr">Calories: ${ meal.calorie }</span>
+          <div class='control-buttons left-brdr'>
+            <i v-on:click='removeMeal(i)'
+            class='fas fa-times'
+            ></i>
+          </div>    
+        </li>
+      </ul>
+      <ul>
         
-        {% block main_scripts %}
-        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-        <script src="{% static 'FitAFSite/js/index.js' %}"></script>
-        {% endblock main_scripts %}
-        
-        {% block extra_scripts %}
-        {% endblock extra_scripts %}
-    </body>
-</html>
+        <li>
+          <span> Total Calories </span>
+          <span class="left-brdr">${ cal_tot }</span>  
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+{% endblock content %}
+
+{% block extra_scripts %}
+<script src="{% static 'FitAFSite/js/index.js' %}"></script>
+{% endblock extra_scripts %}

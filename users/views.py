@@ -1,3 +1,8 @@
 from django.shortcuts import render
 
-# Create your views here.
+# Create new users.
+
+def User(request) {
+    if request.method == 'POST':
+        
+}

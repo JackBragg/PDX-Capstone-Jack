@@ -26,6 +26,7 @@ const app = new Vue({
             this.getMeal()
         },
         removeMeal: async function(index) {
+            this.cal_tot -= Number(this.meals[index].calorie)
             const response = await axios.delete(`api/meal/${this.meals[index].pk}/`)
             console.log(response)            
             // remove meal from this.meals

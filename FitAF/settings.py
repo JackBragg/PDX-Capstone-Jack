@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'FitAFApp',
     'FitAFSite',
+    'SuggestionAPI',
 ]
 
 MIDDLEWARE = [

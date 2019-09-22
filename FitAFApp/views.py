@@ -4,7 +4,8 @@ from django.http import HttpResponse, JsonResponse
 from .models import Meal
 from django.utils import timezone
 from datetime import datetime, timedelta
-import json
+import json, csv
+from FitAF import secret
 
 def meal(request):
     '''
@@ -24,14 +25,13 @@ def meal(request):
         # filter by meals by user
         today = timezone.now().replace(hour=0, minute=0, second=0)
         meals = Meal.objects.filter(owner=request.user, created_date__gte=(today)).order_by('-created_date')
-        #meals = Meal.objects.filter(owner=request.user).order_by('-created_date')
         meal_list = []
         for meal in meals:
             meal_dict = {
                 'pk': meal.pk,
                 'title': meal.title,
                 'calorie': meal.calorie,
-                #'owner': meal.owner.username,
+                'owner': meal.owner.username,
                 'created_date': meal.created_date,
             }
             meal_list.append(meal_dict)
@@ -59,3 +59,5 @@ def meald(request, pk):
     else:
         return HttpResponse(status=404)
 
+def getkeys(request):
+    return JsonResponse(secret.KEYS)

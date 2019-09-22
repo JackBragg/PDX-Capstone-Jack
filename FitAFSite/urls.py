@@ -6,5 +6,6 @@ app_name = 'site' # for namespacing
 urlpatterns = [
     path('', views.index, name='index'),
     path('api/meal/', appviews.meal, name='api/meal/'),
-    path('api/meal/<int:pk>/', appviews.meald, name='meald')
+    path('api/meal/<int:pk>/', appviews.meald, name='meald'),
+    path('api/keys/', appviews.getkeys, name='keys'),
 ]

@@ -11,6 +11,7 @@
 {% endblock extra_styles %}
 
 {% block content %}
+<p><a href="{% url 'logout' %}">logout</a></p>
 <div id='app' style='width:100%;'>
   <div class="meal-in">
     <div class='meal-input-field'>
@@ -27,43 +28,46 @@
     </div>
     <div>
       <button
-      v-on:click='addMeal'
-      id='btn-add'
+        v-on:click='addMeal'
+        id='btn-add'
       >
-      <i class='fas fa-plus'></i>                    
-    </button>
-  </div>
-</div>
-<div class="meal-log">
-  <div class="row">
-    <div class="col-md-8">
-      <div>
-        <ul>
-          <li
-          v-for="meal, i in meals"
-          v-bind:key="i"
-          >
-          <span> ${ meal.title } </span>
-          <span class="left-brdr">Calories: ${ meal.calorie }</span>
-          <div class='control-buttons left-brdr'>
-            <i v-on:click='removeMeal(i)'
-            class='fas fa-times'
-            ></i>
-          </div>    
-        </li>
-      </ul>
-      <ul>
-        
-        <li>
-          <span> Total Calories </span>
-          <span class="left-brdr">${ cal_tot }</span>  
-        </li>
-      </ul>
+        <i class='fas fa-plus'></i>                    
+      </button>
     </div>
   </div>
-</div>
-</div>
-</div>
+  <div class="meal-log">
+    <div class="row">
+      <div class="col-md-8">
+        <div>
+          <ul>
+            <li
+              v-for="meal, i in meals"
+              v-bind:key="i"
+            >
+              <span> ${ meal.title } </span>
+              <span class="left-brdr">Calories: ${ meal.calorie }</span>
+              <div class='control-buttons left-brdr'>
+                <i v-on:click='removeMeal(i)'
+                class='fas fa-times'
+                ></i>
+              </div>    
+            </li>
+          </ul>
+          <ul>
+            <li>
+              <span> Total Calories </span>
+              <span class="left-brdr">${ cal_tot }</span>  
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id='suggestionBox'>    
+     <img v-bind:src='recipe.image' alt=""> 
+      <button v-on:click="suggestion">go</button>
+  </div>
+</div> <!-- end app -->
 {% endblock content %}
 
 {% block extra_scripts %}

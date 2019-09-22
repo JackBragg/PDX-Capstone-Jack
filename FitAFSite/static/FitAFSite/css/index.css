@@ -142,3 +142,9 @@ i:hover {
   height: 600px; 
   min-width: 100%;
 }
+
+#suggestionBox {
+  height: 300px;
+  width: 300px;
+  border: 10px solid red;
+}

@@ -1,0 +1,81 @@
+<html>
+    <head>
+        <title>Fit AF MFer</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>
+            {% block title %}
+                Fit AF
+            {% endblock title %}
+        </title>
+    
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <!-- <link rel="stylesheet" href="{% static 'FitAFSite/css/index.css' %}"> -->
+        <script>
+            const USER = '{{ user }}'
+        </script>   
+
+    </head>
+    <body>
+
+<div class='modal row' style="border: 10px solid red; height: 300px; width: 400px;">
+    <h1>${ owner.username }</h1>
+    <div class='Biometrics col' style="border: 10px solid blue">
+        <label for="weight">weight</label>
+        <input 
+            type="number"
+            id="weight"
+            v-model:value='owner.weight'
+        >
+        <label for="height">height</label>
+        <input 
+            type="number"
+            id="height"
+            v-model:value='owner.height'
+        >
+        <label for="age">age</label>
+        <input 
+            type="number"
+            id="age"
+            v-model:value='owner.age'
+        >
+        <label for="activity">avtivity level</label>
+        <select name="active-level" id="activity">
+            <option value="1.2">sedentary</option>
+            <option value="1.375">lightly active</option>
+            <option value="1.55">moderately active</option>
+            <option value="1.725">very active</option>
+            <option value="1.9">extra active</option>
+        </select>
+    </div>
+    <label for="goals">goals</label>
+    <div id="goals" class="col" style="border: 10px solid green">
+        <label for="carb">carbohydrates</label>
+        <input 
+            type="number"  
+            id="carb"
+            v-model:value="owner.carb_goal"
+        >
+        <label for="protein">protein</label>
+        <input 
+            type="number"  
+            id="protein"
+            v-model:value="owner.protein_goal"
+        >
+        <label for="fat">fat</label>
+        <input 
+            type="number"  
+            id="fat"
+            v-model:value="owner.fat_goal"
+        >
+    </div>
+    <label for="calories">calories</label>
+    <div class="calories">
+        <input 
+            type="number"
+            id="calories"
+            v-model:value="owner.daily_calorie"
+        >
+    </div>
+</div>

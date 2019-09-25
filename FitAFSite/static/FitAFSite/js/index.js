@@ -1,6 +1,10 @@
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
+document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.dropdown-trigger');
+    var instances = M.Dropdown.init(elems);
+  });
     
 document.addEventListener('DOMContentLoaded', function() {
     var elem = document.querySelectorAll('.modal');
@@ -26,6 +30,7 @@ class Recipe {
     constructor() {
         this.image = ''
         this.calories = 0
+        this.cooktime = 0
     }
 };
 
@@ -33,18 +38,22 @@ const app = new Vue({
     el: '#app',
     delimiters: ['${', '}'], // set custom delimiters here instead of {{}}    
     data: {
+        owner: new User,
+        recipe: new Recipe(),
         cal_tot: 0,
         meals: [],
         meal: '',
-        owner: new User,
         cal_in: '',
-        api: 'https://api.edamam.com/search',
         goal: 2000,
         remaining_cal: 0,
-        ingredients: ['apple', 'carrot'],
+        ingr_one: '',
+        ingr_two: '',
+        ingr_three: '',
+        ingr_four: '',
+        search_cals: 0,
+        api: 'https://api.edamam.com/search',
         app_id: '&app_id=',
         app_key: '&app_key=',
-        recipe: new Recipe(),
 
     },
     methods: {
@@ -77,6 +86,7 @@ const app = new Vue({
                     this.cal_tot += Number(this.meals[meal].calorie)
                 }
             }
+            this.goal = this.owner.daily_calorie
             this.remaining_cal = this.goal - this.cal_tot
         },
         getOwner: async function() {
@@ -113,8 +123,19 @@ const app = new Vue({
 
         // suggestion api
         suggestion: async function() {
-            var ingr = '?q=' + this.ingredients.join()
-            var rCals = '&calories=' + this.remaining_cal
+            var ingredients = []
+            if (this.ingr_one) { ingredients.push(this.ingr_one)}
+            if (this.ingr_two) { ingredients.push(this.ingr_two)}
+            if (this.ingr_three) { ingredients.push(this.ingr_three)}
+            if (this.ingr_four) { ingredients.push(this.ingr_four)}
+            var ingr = '?q=' + ingredients.join()
+            var cals = 0
+            if (this.search_cals !== 0){
+                cals = this.search_cals
+            } else {
+                cals = this.remaining_cal
+            }
+            var rCals = '&calories=' + cals
             get = this.api + ingr + this.app_id + this.app_key + rCals
             const response = await axios.get(get)
             console.log(response)

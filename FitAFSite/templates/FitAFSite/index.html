@@ -17,13 +17,13 @@
   <div class="meal-in">
     <div class='meal-input-field'>
       <input 
-      v-model:value='meal' 
+      v-model='meal' 
       type="text" 
       placeholder='food name'>
     </div>
     <div class='meal-input-field'>
       <input 
-      v-model:value='cal_in' 
+      v-model='cal_in' 
       type="text" 
       placeholder='calorie count'>
     </div>
@@ -65,10 +65,11 @@
     </div>
   </div>
   
-  <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
+  <a class="waves-effect waves-light btn modal-trigger" href="#modal1">User Data</a>
+  <a v-on:click="suggestion" class="waves-effect waves-light btn modal-trigger" href="#modal2">Search Me!</a>
 
 <!-- Modal Structure -->
-  <div id="modal1" class="modal" style="height: 500px; width: 800px;">
+  <div id="modal1" class="modal">
     <div class="modal-content">
         <h1> ${ owner.username } </h1>
         <div class='Biometrics col' style="border: 10px solid blue">
@@ -90,14 +91,24 @@
             id="age"
             v-model = 'owner.age'
           >
-          <label for="activity">avtivity level</label>
+          <!-- <label for="activity">avtivity level</label>
           <select name="active-level" id="activity">
             <option value="1.2">sedentary</option>
             <option value="1.375">lightly active</option>
             <option value="1.55">moderately active</option>
             <option value="1.725">very active</option>
             <option value="1.9">extra active</option>
-          </select>
+          </select> -->
+          <a class='dropdown-trigger btn' href='#' data-target='dropdown1'>activity level</a>
+
+          <!-- Dropdown Structure -->
+          <ul id='dropdown1' class='dropdown-content'>
+            <li><a href="#!">sedentary</a></li>
+            <li><a href="#!">lightly active</a></li>
+            <li><a href="#!">moderately active</a></li>
+            <li><a href="#!">very active</a></li>
+            <li><a href="#!">extra active</a></li>
+          </ul>
         </div>
         <label for="goals">goals</label>
         <div id="goals" class="col" style="border: 10px solid green">
@@ -132,12 +143,49 @@
     <div class="modal-footer">
         <a v-on:click='modOwner'  href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
     </div>
-  </div>
+  </div> <!-- end modal1 -->
 
-  <div id='suggestionBox'>    
-     <img v-bind:src='recipe.image' alt=""> 
-      <button v-on:click="suggestion">go</button>
-  </div>
+
+  <div id="modal2" class="modal" style="height: 400px; width: 1000px;">
+    <div class="modal-content">
+      <div class="search-box">
+        <div class="search-ingrs">
+          <label for="ingr_one">Ingredient One</label>
+          <input v-model="ingr_one" type="text" id="ingr_one">
+          <label for="ingr_two">Ingredient Two</label>
+          <input v-model="ingr_two" type="text" id="ingr_two">
+          <label for="ingr_three">Ingredient Three</label>
+          <input v-model="ingr_three" type="text" id="ingr_three">
+          <label for="ingr_four">Ingredient Four</label>
+          <input v-model="ingr_four" type="text" id="ingr_four">
+        </div>
+        <div class="search-cooktime">
+          <label for="cooktime">Cook Time:</label>
+          <input v-model="recipe.cooktime" type="number" id="cooktime">
+        </div>
+        <div class="search-diet">
+
+        </div>
+        <div class="search-cal">
+          <label for="search-cals">Cook Time:</label>
+          <input v-model="recipe.cooktime" type="number" id="search-cals">
+        </div>
+        <div class='search-macros'>
+
+        </div>
+        <div id='suggestionBox' style="background-size: contain; max-height: 100px; max-width: 100px;">    
+          <img v-bind:src='recipe.image' alt=""> 
+        </div>
+      
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <a v-on:click='suggestion'  href="#!" class="waves-effect waves-green btn-flat">Search</a>
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+    </div>
+  </div>  <!-- end modal2 -->
+
 </div> <!-- end app -->
 {% endblock content %}
 

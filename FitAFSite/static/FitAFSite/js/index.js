@@ -28,6 +28,7 @@ class User {
 
 class Recipe {
     constructor() {
+        this.url = ''
         this.image = ''
         this.calories = 0
         this.cooktime = 0
@@ -123,12 +124,17 @@ const app = new Vue({
 
         // suggestion api
         suggestion: async function() {
+            // will use _search_hits to find best match
+
+            // if ingredients are entered then will colate them
             var ingredients = []
             if (this.ingr_one) { ingredients.push(this.ingr_one)}
             if (this.ingr_two) { ingredients.push(this.ingr_two)}
             if (this.ingr_three) { ingredients.push(this.ingr_three)}
             if (this.ingr_four) { ingredients.push(this.ingr_four)}
             var ingr = '?q=' + ingredients.join()
+
+            // if search cals blank then use remaining cals
             var cals = 0
             if (this.search_cals !== 0){
                 cals = this.search_cals
@@ -136,12 +142,26 @@ const app = new Vue({
                 cals = this.remaining_cal
             }
             var rCals = '&calories=' + cals
+            
+            // TODO add in diet restrictions
             get = this.api + ingr + this.app_id + this.app_key + rCals
             const response = await axios.get(get)
             console.log(response)
+            this.recipe.url = response.data.hits[0].recipe.url
             this.recipe.image = response.data.hits[0].recipe.image
             this.recipe.calories = response.data.hits[0].recipe.calories
+            this.recipe.cooktime = response.data.hits[0].recipe.totalNutrients.totalTime
             console.log(this.recipe)
+        },
+
+        _search_hits: function(hits) {
+            // This takes in 10 recipe hits from API and searches for most relevent
+            var img = hits[0].recipe.image
+            var cal = hits[0].recipe.calories
+            var cooktime = hits[0].recipe.totalNutrients.totalTime
+            var fat = hits[0].recipe.digest['Fat']
+            var carb = hits[0].recipe.digest['Carbs']
+            var pro = hits[0].recipe.digest['Protein']
         },
 
         // grabs api keys

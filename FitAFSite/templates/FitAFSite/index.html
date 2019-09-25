@@ -164,17 +164,19 @@
           <input v-model="recipe.cooktime" type="number" id="cooktime">
         </div>
         <div class="search-diet">
-
+<!-- drop down selection -->
         </div>
         <div class="search-cal">
-          <label for="search-cals">Cook Time:</label>
+          <label for="search-cals">Calories:</label>
           <input v-model="recipe.cooktime" type="number" id="search-cals">
         </div>
         <div class='search-macros'>
-
+<!-- three macro fields -->
         </div>
         <div id='suggestionBox' style="background-size: contain; max-height: 100px; max-width: 100px;">    
-          <img v-bind:src='recipe.image' alt=""> 
+          <a v-bind:href="recipe.url">
+            <img v-bind:src='recipe.image' alt=""> 
+          </a> 
         </div>
       
       </div>

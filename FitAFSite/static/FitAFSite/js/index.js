@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 class User {
     constructor() {
+        this.username = 'boogers'
         this.weight = 0
         this.height = 0
         this.age = 0
@@ -35,7 +36,7 @@ const app = new Vue({
         cal_tot: 0,
         meals: [],
         meal: '',
-        owner: User,
+        owner: new User,
         cal_in: '',
         api: 'https://api.edamam.com/search',
         goal: 2000,
@@ -78,17 +79,36 @@ const app = new Vue({
             }
             this.remaining_cal = this.goal - this.cal_tot
         },
-        setOwner: async function() {
-            this.owner = USER
-            this.owner.weight = USER.weight
-            this.owner.height = USER.height
-            this.owner.age = USER.age
-            this.owner.activity = USER.activity
-            this.owner.carb_goal = USER.carb_goal
-            this.owner.fat_goal = USER.fat_goal
-            this.owner.protein_goal = USER.protein_goal
-            this.owner.daily_calorie = USER.daily_calorie
-            const response = await axios.post('api/meal/', {User: this.owner})
+        getOwner: async function() {
+            const response = await axios.get('api/user/')
+            console.log('boogers', response)
+
+            var USER = response.data
+            // this.owner = USER
+            this.owner.username = USER['username']
+            this.owner.weight = USER['weight']
+            this.owner.height = USER['height']
+            this.owner.age = USER['age']
+            this.owner.activity = USER['activity']
+            this.owner.carb_goal = USER['carb_goal']
+            this.owner.fat_goal = USER['fat_goal']
+            this.owner.protein_goal = USER['protein_goal']
+            this.owner.daily_calorie = USER['daily_calorie']
+        },
+
+        modOwner: async function() {
+            var modUser = {
+            'weight' : this.owner.weight,
+            'height' : this.owner.height,
+            'age' : this.owner.age,
+            'activity' : this.owner.activity,
+            'carb_goal' : this.owner.carb_goal,
+            'fat_goal' : this.owner.fat_goal,
+            'protein_goal' : this.owner.protein_goal,
+            'daily_calorie' : this.owner.daily_calorie
+            }
+            const response = await axios.post('api/user/', modUser)
+            console.log(response)
         },
 
         // suggestion api
@@ -112,7 +132,7 @@ const app = new Vue({
     },
     mounted: function() {
         // USER assigned in base.html
-        this.setOwner()
+        this.getOwner()
         this.getkeys()
         this.cal_tot = 0
         this.getMeal()

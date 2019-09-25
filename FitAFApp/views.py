@@ -2,10 +2,12 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from .models import Meal
+from users.models import CustomUser
 from django.utils import timezone
 from datetime import datetime, timedelta
 import json, csv
 from FitAF import secret
+
 
 def meal(request):
     '''
@@ -18,7 +20,7 @@ def meal(request):
             # deserialize json string
             data = json.loads(request.body)
             # set owner as request.user
-            meal = Meal(owner=request.user, title=data['title'], calorie=data['calories'])
+            meal = Meal(owner=request.user, title = data['title'], calorie = data['calories'])
             meal.save()
             return HttpResponse(status=201)        
 
@@ -58,6 +60,38 @@ def meald(request, pk):
         return JsonResponse(meal_dict)
     else:
         return HttpResponse(status=404)
+
+def user(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            # change field data
+            data = json.loads(request.body)
+            # set owner as request.user
+            USER = request.user
+            USER.weight = data['weight']
+            USER.height = data['height']
+            USER.age = data['age']
+            USER.activity = data['activity']
+            USER.carb_goal = data['carb_goal']
+            USER.fat_goal = data['fat_goal']
+            USER.protein_goal = data['protein_goal']
+            USER.daily_calorie = data['daily_calorie'] 
+            USER.save()
+            return HttpResponse(status=201)  
+        
+        # grab user field data
+        user_dict = {
+            "username" : request.user.username,
+            "weight" : request.user.weight,
+            "height" : request.user.height,
+            "age" : request.user.age,
+            "activity" : request.user.activity,
+            "carb_goal" : request.user.carb_goal,
+            "fat_goal" : request.user.fat_goal,
+            "protein_goal" : request.user.protein_goal,
+            "daily_calorie" : request.user.daily_calorie,
+        }
+        return JsonResponse(user_dict)
 
 def getkeys(request):
     return JsonResponse(secret.KEYS)

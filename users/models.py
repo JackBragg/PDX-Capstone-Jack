@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+import json
 
 class CustomUser(AbstractUser):
     weight = models.FloatField(blank=True, null=True)
@@ -10,3 +11,6 @@ class CustomUser(AbstractUser):
     fat_goal = models.FloatField(blank=True, null=True)
     protein_goal = models.FloatField(blank=True, null=True)
     daily_calorie = models.IntegerField(blank=True, null=True)
+
+    def jsonify(self):
+        return json.dumps(self)

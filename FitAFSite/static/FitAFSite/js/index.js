@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
 class User {
     constructor() {
         this.username = 'boogers'
+        this.gender = undefined
         this.weight = 0
         this.height = 0
         this.age = 0
@@ -108,6 +109,20 @@ const app = new Vue({
         },
 
         modOwner: async function() {
+            if (!this.owner.daily_calorie) {
+                if (this.owner.gender != null) {
+                    if (this.owner.gender) {
+                        var BMR = 66 + (6.3*this.owner.weight) + (12.9 * this.owner.height) - (6.8 * this.owner.age)
+                    } else {
+                        var BMR = 655 + (4.3 * this.owner.weight) + (4.7 * this.owner.height) - (4.7 * this.owner.age)
+                    }
+                    if (this.owner.activity) {
+                        this.owner.daily_calorie = Math.round(BMR * this.owner.activity)
+                    }
+                } else {
+                    alert ('Daily caloric intake cannot be calculated unless a gender is selected')
+                }
+            }
             var modUser = {
             'weight' : this.owner.weight,
             'height' : this.owner.height,
@@ -116,7 +131,8 @@ const app = new Vue({
             'carb_goal' : this.owner.carb_goal,
             'fat_goal' : this.owner.fat_goal,
             'protein_goal' : this.owner.protein_goal,
-            'daily_calorie' : this.owner.daily_calorie
+            'daily_calorie' : this.owner.daily_calorie,
+            'gender' : this.owner.gender
             }
             const response = await axios.post('api/user/', modUser)
             console.log(response)

@@ -103,12 +103,21 @@
 
           <!-- Dropdown Structure -->
           <ul id='dropdown1' class='dropdown-content'>
-            <li><a href="#!">sedentary</a></li>
-            <li><a href="#!">lightly active</a></li>
-            <li><a href="#!">moderately active</a></li>
-            <li><a href="#!">very active</a></li>
-            <li><a href="#!">extra active</a></li>
+            <li><a v-on:click="owner.activity = 1.2" href="#!">sedentary</a></li>
+            <li><a v-on:click="owner.activity = 1.375" href="#!">lightly active</a></li>
+            <li><a v-on:click="owner.activity = 1.55" href="#!">moderately active</a></li>
+            <li><a v-on:click="owner.activity = 1.725" href="#!">very active</a></li>
+            <li><a v-on:click="owner.activity = 1.9" href="#!">extra active</a></li>
           </ul>
+
+          <a class='dropdown-trigger btn' href='#' data-target='dropdown2'>Gender</a>
+
+          <!-- Dropdown Structure -->
+          <ul id='dropdown2' class='dropdown-content'>
+            <li><a v-on:click="owner.gender = 0" href="#!">Female</a></li>
+            <li><a v-on:click="owner.gender = 1"  href="#!">Male</a></li>
+          </ul>
+
         </div>
         <label for="goals">goals</label>
         <div id="goals" class="col" style="border: 10px solid green">

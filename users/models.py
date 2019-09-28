@@ -3,6 +3,7 @@ from django.db import models
 import json
 
 class CustomUser(AbstractUser):
+    gender = models.BooleanField(blank=True, null=True)
     weight = models.FloatField(blank=True, null=True)
     height = models.FloatField(blank=True, null=True)
     age = models.IntegerField(blank=True, null=True)

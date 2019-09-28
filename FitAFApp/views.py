@@ -68,6 +68,7 @@ def user(request):
             data = json.loads(request.body)
             # set owner as request.user
             USER = request.user
+            USER.gender = data['gender']
             USER.weight = data['weight']
             USER.height = data['height']
             USER.age = data['age']

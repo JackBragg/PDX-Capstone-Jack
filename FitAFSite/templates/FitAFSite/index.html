@@ -13,20 +13,32 @@
 
 {% block content %}
 <p><a href="{% url 'logout' %}">logout</a></p>
+
+
+
+
+
 <div id='app' style='width:100%;'>
   <div class="meal-in">
     <div class='meal-input-field'>
       <input 
-      v-model='meal' 
+      v-model='meal.title' 
       type="text" 
-      placeholder='food name'>
+      placeholder='meal name'>
     </div>
     <div class='meal-input-field'>
       <input 
-      v-model='cal_in' 
-      type="text" 
-      placeholder='calorie count'>
+      v-model='meal.calories'
+      type="number" 
+      placeholder='calorie count for entire meal'>
     </div>
+    <div class='meal-input-field'>
+      <input 
+      v-model='meal.servings'
+      type="number" 
+      placeholder='Servings for entire meal'>
+    </div>
+
     <div>
       <button
         v-on:click='addMeal'
@@ -46,7 +58,12 @@
               v-bind:key="i"
             >
               <span> ${ meal.title } </span>
-              <span class="left-brdr">Calories: ${ meal.calorie }</span>
+              <span class="left-brdr">Calories: ${ meal.eaten_cals() }</span>
+              <span class="left-brdr">
+                <a class="modal-trigger" href="#servings_modal">
+                  Servings: ${ meal.servings }
+                </a>
+              </span>
               <div class='control-buttons left-brdr'>
                 <i v-on:click='removeMeal(i)'
                 class='fas fa-times'
@@ -66,9 +83,31 @@
   </div>
   
   <a class="waves-effect waves-light btn modal-trigger" href="#modal1">User Data</a>
-  <a v-on:click="suggestion" class="waves-effect waves-light btn modal-trigger" href="#modal2">Search Me!</a>
+  <a class="waves-effect waves-light btn modal-trigger" href="#modal2">Search Me!</a>
+  
+<!-- Servings Modal -->
+<div id="servings_modal" class="modal">
+  <div class="modal-content">
+      <input 
+      type="number"
+      id="height"
+      v-model='meal.servings'
+    >
+  </div>
+  <div class="modal-footer">
+    <a 
+      v-on:click='modOwner'  
+      href="#!" 
+      class="modal-close waves-effect waves-green btn-flat"
+    >
+    Done
+    </a>
+  </div>
+  
+  </div>
 
-<!-- Modal Structure -->
+
+<!-- User Modal -->
   <div id="modal1" class="modal">
     <div class="modal-content">
         <h1> ${ owner.username } </h1>
@@ -145,9 +184,9 @@
     <div class="modal-footer">
         <a v-on:click='modOwner'  href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
     </div>
-  </div> <!-- end modal1 -->
+  </div> <!-- end User Modal -->
 
-
+  <!-- Search Modal -->
   <div id="modal2" class="modal" style="height: 400px; width: 1000px;">
     <div class="modal-content">
       <div class="search-box">
@@ -188,7 +227,7 @@
       <a v-on:click='suggestion'  href="#!" class="waves-effect waves-green btn-flat">Search</a>
       <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
     </div>
-  </div>  <!-- end modal2 -->
+  </div>  <!-- end Serch Modal -->
 
 </div> <!-- end app -->
 {% endblock content %}

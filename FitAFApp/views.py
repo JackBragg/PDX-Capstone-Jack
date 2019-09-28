@@ -31,10 +31,17 @@ def meal(request):
         for meal in meals:
             meal_dict = {
                 'pk': meal.pk,
-                'title': meal.title,
-                'calorie': meal.calorie,
                 'owner': meal.owner.username,
                 'created_date': meal.created_date,
+                'title': meal.title,
+                'url': meal.url,
+                'image': meal.image,
+                'calories': meal.calories,
+                'cooktime': meal.cooktime,
+                'servings': meal.servings,
+                'fat': meal.fat,
+                'carb': meal.carb,
+                'pro': meal.pro
             }
             meal_list.append(meal_dict)
         return JsonResponse(meal_list, safe=False)
@@ -91,6 +98,7 @@ def user(request):
             "fat_goal" : request.user.fat_goal,
             "protein_goal" : request.user.protein_goal,
             "daily_calorie" : request.user.daily_calorie,
+            "gender" : request.user.gender
         }
         return JsonResponse(user_dict)
 

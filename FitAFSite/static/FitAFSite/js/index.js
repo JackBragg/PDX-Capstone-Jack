@@ -3,12 +3,12 @@ axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
 document.addEventListener('DOMContentLoaded', function() {
     var elems = document.querySelectorAll('.dropdown-trigger');
-    var instances = M.Dropdown.init(elems);
+    var drop_instances = M.Dropdown.init(elems);
   });
     
 document.addEventListener('DOMContentLoaded', function() {
     var elem = document.querySelectorAll('.modal');
-    var instance = M.Modal.init(elem);
+    var modal_instance = M.Modal.init(elem);
   });
     
 
@@ -29,15 +29,32 @@ class User {
 
 class Recipe {
     constructor() {
+        this.title = ''
         this.url = ''
         this.image = ''
-        this.calories = 0
+        this.calories = 1
         this.cooktime = 0
-        this.yield = 1
+        this.servings = 1
         this.fat = 0.0
         this.carb = 0.0
         this.pro = 0.0
+
+        this.cals_consumed = 0
     }
+
+    eaten_cals () {
+        if (!this.cals_consumed) {
+            if (this.servings >= 1) {
+                this.cals_consumed = (((this.calories > 0) && (this.servings > 0)) ? Math.floor(this.calories / this.servings) : this.calories)
+            } else {
+                this.cals_consumed = (((this.calories > 0) && (this.servings > 0)) ? Math.floor(this.calories * this.servings) : this.calories)
+            }
+        }
+        
+        return this.cals_consumed
+        
+    }
+    
 };
 
 const app = new Vue({
@@ -48,8 +65,7 @@ const app = new Vue({
         recipe: new Recipe(),
         cal_tot: 0,
         meals: [],
-        meal: '',
-        cal_in: '',
+        meal: new Recipe(),
         goal: 2000,
         remaining_cal: 0,
         ingr_one: '',
@@ -64,16 +80,14 @@ const app = new Vue({
     },
     methods: {
         addMeal: async function() {
-            this.cal_in = Number(this.cal_in)
             if (this.cal_tot) {
-                this.cal_tot += this.cal_in
+                this.cal_tot += this.meal.eaten_cals()
             }
-            const response = await axios.post('api/meal/', {title: this.meal, calories: this.cal_in})
+            const response = await axios.post('api/meal/', this.meal)
             console.log(response)
             // // add meal to this.meals
             // this.meals.push({text: this.meal, completed: false})
-            this.meal = ''
-            this.cal_in = ''
+            this.meal = new Recipe()
             this.getMeal()
         },
         removeMeal: async function(index) {
@@ -97,11 +111,12 @@ const app = new Vue({
         },
         getOwner: async function() {
             const response = await axios.get('api/user/')
-            console.log('boogers', response)
+            console.log('users api call', response)
 
             var USER = response.data
             // this.owner = USER
             this.owner.username = USER['username']
+            this.owner.gender = USER['gender']
             this.owner.weight = USER['weight']
             this.owner.height = USER['height']
             this.owner.age = USER['age']
@@ -144,7 +159,7 @@ const app = new Vue({
 
         // suggestion api
         suggestion: async function() {
-            // will use _search_hits to find best match
+            // will use _parse_recipies to find best match
 
             // if ingredients are entered then will colate them
             var ingredients = []
@@ -164,47 +179,50 @@ const app = new Vue({
             var rCals = '&calories=' + cals
             
             // TODO add in diet restrictions
+            // Edamam API call
             get = this.api + ingr + this.app_id + this.app_key + rCals
             const response = await axios.get(get)
-            console.log(response)
-
-            this.recipe.calories = response.data.hits[0].recipe.calories
-            this.recipe.yield = response.data.hits[0].recipe.yield
-            console.log(this.recipe.calories, this.recipe.yield)
-            this.recipe.url = response.data.hits[0].recipe.url
-            this.recipe.image = response.data.hits[0].recipe.image
-            this.recipe.cooktime = response.data.hits[0].recipe.totalNutrients.totalTime
+            
+            // Filter results
+            this.recipe = this._parse_recipes(response.data.hits)
             console.log(this.recipe)
         },
 
-        _search_hits: function(hits) {
+        add_sugg_to_meal: function() {
+            pass
+        },
+
+        _parse_recipes: function(hits) {
             // This takes in 10 recipe hits from API and searches for most relevent
             var closest = new Recipe()
             var recipes = []
-            for (i=0; i <= hits.length; i++) {
+            // builds list of recipes
+            for (i=0; i < hits.length; i++) {
                 var rcp = new Recipe()
-                this.rcp.url = hits[i].recipe.url
-                this.rcp.image = hits[i].recipe.image
-                this.rcp.calories = hits[i].recipe.calories
-                this.rcp.cooktime = hits[i].recipe.totalNutrients.totalTime
-                this.rcp.yield = hits[i].recipe.yield
-                this.rcp.fat = hits[i].recipe.digest['Fat']
-                this.rcp.carb = hits[i].recipe.digest['Carbs']
-                this.rcp.pro = hits[i].recipe.digest['Protein']
-                this.rcp.serv_cal = Math.floor(this.rcp.calories / this.rcp.yield)
-                this.recipes.push(this.rcp)
+                rcp.url = hits[i].recipe.url
+                rcp.image = hits[i].recipe.image
+                rcp.calories = hits[i].recipe.calories
+                rcp.cooktime = hits[i].recipe.totalNutrients.totalTime
+                rcp.servings = hits[i].recipe.yield
+                rcp.fat = hits[i].recipe.digest['Fat']
+                rcp.carb = hits[i].recipe.digest['Carbs']
+                rcp.pro = hits[i].recipe.digest['Protein']
+                recipes.push(rcp)
             }
-            this.closest = recipes[0]
-            if (this.recipes.length > 1) {
-                for (i=1; i <= this.recipes.length; i++){
-                    var cl_dist = this.owner.daily_calorie - this.closest.serv_cal
-                    var nxt_dist = this.owner.daily_calorie - this.recipes[i].serv_cal
-                    if (this.cl_dist > this.nxt_dist) {
+            // finds most ideal match based on cals
+            closest = recipes[0]
+            if (recipes.length > 1) {
+                for (i=1; i < recipes.length; i++){
+                    var cl_dist = this.remaining_cal - closest.eaten_cals()
+                    var nxt_dist = this.remaining_cal - recipes[i].eaten_cals()
+                    console.log('closest', cl_dist, 'next', nxt_dist)
+                    if (cl_dist > nxt_dist) {
                         // if this recipe is closer to the remaining cals then use this
-                        this.closest = this.recipes[i]
+                        closest = recipes[i]
                     }
                 }
             }
+            return closest
 
         },
 
@@ -221,8 +239,9 @@ const app = new Vue({
         this.getkeys()
         this.cal_tot = 0
         this.getMeal()
+        // Only uncomment this when finished! otherwise it will exceed api limit!!!!!!!!!!
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // this.suggestion()
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 });
-                rcp.carb
-                rcp.pro
-                rcp.serv_cal

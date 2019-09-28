@@ -19,52 +19,54 @@ def meal(request):
         if request.method == 'POST':
             # deserialize json string
             data = json.loads(request.body)
-            # set owner as request.user
-            meal = Meal(owner=request.user, title = data['title'], calorie = data['calories'])
+            meal = Meal()
+            meal.owner = request.user.username
+            meal.created_date = timezone.now()
+            meal.title = data['title']
+            meal.url = data['url']
+            meal.image = data['image']
+            meal.calories = data['calories']
+            meal.cooktime = data['cooktime']
+            meal.servings = data['servings']
+            meal.fat = data['fat']
+            meal.carb = data['carb']
+            meal.pro = data['pro']
             meal.save()
             return HttpResponse(status=201)        
 
-        # filter by meals by user
-        today = timezone.now().replace(hour=0, minute=0, second=0)
-        meals = Meal.objects.filter(owner=request.user, created_date__gte=(today)).order_by('-created_date')
-        meal_list = []
-        for meal in meals:
-            meal_dict = {
-                'pk': meal.pk,
-                'owner': meal.owner.username,
-                'created_date': meal.created_date,
-                'title': meal.title,
-                'url': meal.url,
-                'image': meal.image,
-                'calories': meal.calories,
-                'cooktime': meal.cooktime,
-                'servings': meal.servings,
-                'fat': meal.fat,
-                'carb': meal.carb,
-                'pro': meal.pro
-            }
-            meal_list.append(meal_dict)
-        return JsonResponse(meal_list, safe=False)
+        if request.method == 'GET':
+            # filter by meals by user
+            today = timezone.now().replace(hour=0, minute=0, second=0)
+            meals = Meal.objects.filter(owner=request.user, created_date__gte=(today)).order_by('-created_date')
+            print('*'*60, meals[0].pk, '*'*60)
+            meal_list = []
+            for meal in meals:
+                meal_dict = {
+                    'pk': meal.pk,
+                    'owner': meal.owner.username,
+                    'created_date': meal.created_date,
+                    'title': meal.title,
+                    'url': meal.url,
+                    'image': meal.image,
+                    'calories': meal.calories,
+                    'cooktime': meal.cooktime,
+                    'servings': meal.servings,
+                    'fat': meal.fat,
+                    'carb': meal.carb,
+                    'pro': meal.pro
+                }
+                meal_list.append(meal_dict)
+            return JsonResponse(meal_list, safe=False)
 
     # give client not authorized error if user is not logged in
     return HttpResponse('User not authenticated', status=401)
 
-def meald(request, pk):
+def meal_d(request, pk):
     if request.user.is_authenticated:
         meal = get_object_or_404(Meal, pk=pk)
         if request.method == 'DELETE':
             meal.delete()
             return HttpResponse(status=204)
-
-        meal_dict = {
-            'pk': meal.pk,
-            'owner': meal.owner,
-            'text': meal.text,
-            'completed': meal.completed,
-            'created_date': meal.created_date,
-            'completed_date': meal.completed_date
-        } 
-        return JsonResponse(meal_dict)
     else:
         return HttpResponse(status=404)
 

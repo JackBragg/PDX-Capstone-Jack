@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 class User {
     constructor() {
-        this.username = 'boogers'
+        this.username = 'Default'
         this.gender = undefined
         this.weight = 0
         this.height = 0
@@ -44,13 +44,24 @@ class Recipe {
 
     eaten_cals () {
         if (!this.cals_consumed) {
-            if (this.servings >= 1) {
-                this.cals_consumed = (((this.calories > 0) && (this.servings > 0)) ? Math.floor(this.calories / this.servings) : this.calories)
+            if (this.servings >= 1) { 
+                if ((this.calories > 0) && (this.servings > 0)){
+                    this.cals_consumed = Math.floor(this.calories / this.servings) 
+                    
+                } else {
+                    this.cals_consumed = this.calories
+                    this.servings = 1
+                }
             } else {
-                this.cals_consumed = (((this.calories > 0) && (this.servings > 0)) ? Math.floor(this.calories * this.servings) : this.calories)
+                if ((this.calories > 0) && (this.servings > 0)){
+                    this.cals_consumed = Math.floor(this.calories * this.servings) 
+                    
+                } else {
+                    this.cals_consumed = this.calories
+                    this.servings = 1
+                }
             }
         }
-        
         return this.cals_consumed
         
     }
@@ -101,10 +112,25 @@ const app = new Vue({
         getMeal: async function() {
             const response = await axios.get('api/meal/')
             this.meals = response.data
+            // if page load add all together
             if (!this.cal_tot) {
                 for (meal in this.meals) {
-                    this.cal_tot += Number(this.meals[meal].calorie)
+                    this.cal_tot += this.meals[meal].calories
                 }
+            }
+            for (i=0; i < this.meals.length; i++) {
+                var temp = new Recipe()
+                temp.title = this.meals[i].title
+                temp.url = this.meals[i].url
+                temp.image = this.meals[i].image
+                temp.calories = this.meals[i].calories
+                temp.cooktime = this.meals[i].cooktime
+                temp.servings = this.meals[i].servings
+                temp.fat = this.meals[i].fat
+                temp.carb = this.meals[i].carb
+                temp.pro = this.meals[i].pro
+                temp.eaten_cals()
+                this.meals[i] = temp
             }
             this.goal = this.owner.daily_calorie
             this.remaining_cal = this.goal - this.cal_tot

@@ -57,7 +57,7 @@
           <ul>
             <li>
               <span> Total Calories </span>
-              <span class="left-brdr">${ cal_tot }</span>  
+              <span class="left-brdr">${ cal_tot } / ${owner.daily_calorie} daily goal</span>  
             </li>
           </ul>
         </div>
@@ -91,14 +91,7 @@
             id="age"
             v-model = 'owner.age'
           >
-          <!-- <label for="activity">avtivity level</label>
-          <select name="active-level" id="activity">
-            <option value="1.2">sedentary</option>
-            <option value="1.375">lightly active</option>
-            <option value="1.55">moderately active</option>
-            <option value="1.725">very active</option>
-            <option value="1.9">extra active</option>
-          </select> -->
+
           <a class='dropdown-trigger btn' href='#' data-target='dropdown1'>activity level</a>
 
           <!-- Dropdown Structure -->

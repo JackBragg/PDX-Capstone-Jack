@@ -16,6 +16,7 @@ class Meal(models.Model):
     fat = models.IntegerField(blank=True, null=True)
     carb = models.IntegerField(blank=True, null=True)
     pro = models.IntegerField(blank=True, null=True)
+    meal_time = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.title

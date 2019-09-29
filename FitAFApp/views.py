@@ -22,6 +22,7 @@ def meal(request):
             meal = Meal()
             meal.owner = request.user
             meal.created_date = timezone.now()
+            # repeated below, could be own func
             meal.title = data['title']
             meal.url = data['url']
             meal.image = data['image']
@@ -31,6 +32,8 @@ def meal(request):
             meal.fat = data['fat']
             meal.carb = data['carb']
             meal.pro = data['pro']
+            meal.meal_time = data['meal_time']
+            # end repeat
             meal.save()
             return HttpResponse(status=201)        
 
@@ -44,6 +47,7 @@ def meal(request):
                     'pk': meal.pk,
                     'owner': meal.owner.username,
                     'created_date': meal.created_date,
+                    # repeated above, could be own func
                     'title': meal.title,
                     'url': meal.url,
                     'image': meal.image,
@@ -52,7 +56,9 @@ def meal(request):
                     'servings': meal.servings,
                     'fat': meal.fat,
                     'carb': meal.carb,
-                    'pro': meal.pro
+                    'pro': meal.pro,
+                    'meal_time' : meal.meal_time
+                    # end repeat
                 }
                 meal_list.append(meal_dict)
             return JsonResponse(meal_list, safe=False)

@@ -38,6 +38,7 @@ class Recipe {
         this.fat = 0.0
         this.carb = 0.0
         this.pro = 0.0
+        this.meal_time = ''
 
         this.cals_consumed = 0
     }
@@ -81,7 +82,8 @@ const app = new Vue({
 
     },
     methods: {
-        addMeal: async function() {
+        addMeal: async function(meal_time_in='breakfast') {
+            this.meal.meal_time = meal_time_in
             if (this.cal_tot) {
                 this.cal_tot += this.meal.eaten_cals()
             }
@@ -112,19 +114,6 @@ const app = new Vue({
                 }
             }
             for (i=0; i < this.meals.length; i++) {
-                // var temp = new Recipe()
-                // temp.pk = this.meals[i].pk
-                // temp.title = this.meals[i].title
-                // temp.url = this.meals[i].url
-                // temp.image = this.meals[i].image
-                // temp.calories = this.meals[i].calories
-                // temp.cooktime = this.meals[i].cooktime
-                // temp.servings = this.meals[i].servings
-                // temp.fat = this.meals[i].fat
-                // temp.carb = this.meals[i].carb
-                // temp.pro = this.meals[i].pro
-                // temp.eaten_cals()
-                // this.meals[i] = temp
                 this.meals[i] = this.conv_meal(this.meals[i])
             }
             // console.log('meals', this.meals)
@@ -144,6 +133,7 @@ const app = new Vue({
             temp.fat = meal_in.fat
             temp.carb = meal_in.carb
             temp.pro = meal_in.pro
+            temp.meal_time = meal_in.meal_time
             temp.eaten_cals()
             return temp
         },

@@ -60,7 +60,7 @@
               <span> ${ meal.title } </span>
               <span class="left-brdr">Calories: ${ meal.eaten_cals() }</span>
               <span class="left-brdr">
-                <a class="modal-trigger" href="#servings_modal">
+                <a v-on:click="serv_modal_func(i)" class="modal-trigger" href="#servings_modal">
                   Servings: ${ meal.servings }
                 </a>
               </span>
@@ -91,20 +91,19 @@
       <input 
       type="number"
       id="servings"
-      v-model='meal.servings'
+      v-model='modal_servings'
     >
   </div>
   <div class="modal-footer">
     <a 
-      v-on:click=''  
+      v-on:click='set_clear_serv_modal_data'  
       href="#!" 
       class="modal-close waves-effect waves-green btn-flat"
     >
     Done
     </a>
-  </div>
-  
-  </div>
+  </div>  
+</div>
 
 
 <!-- User Modal -->

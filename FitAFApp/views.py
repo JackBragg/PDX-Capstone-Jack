@@ -20,7 +20,7 @@ def meal(request):
             # deserialize json string
             data = json.loads(request.body)
             meal = Meal()
-            meal.owner = request.user.username
+            meal.owner = request.user
             meal.created_date = timezone.now()
             meal.title = data['title']
             meal.url = data['url']
@@ -38,7 +38,6 @@ def meal(request):
             # filter by meals by user
             today = timezone.now().replace(hour=0, minute=0, second=0)
             meals = Meal.objects.filter(owner=request.user, created_date__gte=(today)).order_by('-created_date')
-            print('*'*60, meals[0].pk, '*'*60)
             meal_list = []
             for meal in meals:
                 meal_dict = {

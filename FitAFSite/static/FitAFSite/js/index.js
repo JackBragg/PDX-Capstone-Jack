@@ -42,26 +42,15 @@ class Recipe {
         this.cals_consumed = 0
     }
 
-    eaten_cals () {
-        if (!this.cals_consumed) {
-            if (this.servings >= 1) { 
-                if ((this.calories > 0) && (this.servings > 0)){
-                    this.cals_consumed = Math.floor(this.calories / this.servings) 
-                    
-                } else {
-                    this.cals_consumed = this.calories
-                    this.servings = 1
-                }
-            } else {
-                if ((this.calories > 0) && (this.servings > 0)){
-                    this.cals_consumed = Math.floor(this.calories * this.servings) 
-                    
-                } else {
-                    this.cals_consumed = this.calories
-                    this.servings = 1
-                }
-            }
+    eaten_cals() {
+        // if (!this.cals_consumed) {    
+        if ((this.calories > 0) && (this.servings > 0)){
+            this.cals_consumed = Math.floor(this.calories * this.servings)     
+        } else {
+            this.cals_consumed = this.calories
+            this.servings = 1
         }
+        // }
         return this.cals_consumed
         
     }
@@ -84,6 +73,8 @@ const app = new Vue({
         ingr_three: '',
         ingr_four: '',
         search_cals: 0,
+        modal_servings: 1,
+        _modal_data: null,
         api: 'https://api.edamam.com/search',
         app_id: '&app_id=',
         app_key: '&app_key=',
@@ -102,15 +93,17 @@ const app = new Vue({
             this.getMeal()
         },
         removeMeal: async function(index) {
-            this.cal_tot -= Number(this.meals[index].calorie)
+            this.cal_tot -= this.meals[index].eaten_cals()
             const response = await axios.delete(`api/meal/${this.meals[index].pk}/`)
             console.log(response)            
             // remove meal from this.meals
             // this.meals.splice(index, 1)
             this.getMeal()
         },
+
         getMeal: async function() {
             const response = await axios.get('api/meal/')
+            // console.log('resp', response)
             this.meals = response.data
             // if page load add all together
             if (!this.cal_tot) {
@@ -119,22 +112,42 @@ const app = new Vue({
                 }
             }
             for (i=0; i < this.meals.length; i++) {
-                var temp = new Recipe()
-                temp.title = this.meals[i].title
-                temp.url = this.meals[i].url
-                temp.image = this.meals[i].image
-                temp.calories = this.meals[i].calories
-                temp.cooktime = this.meals[i].cooktime
-                temp.servings = this.meals[i].servings
-                temp.fat = this.meals[i].fat
-                temp.carb = this.meals[i].carb
-                temp.pro = this.meals[i].pro
-                temp.eaten_cals()
-                this.meals[i] = temp
+                // var temp = new Recipe()
+                // temp.pk = this.meals[i].pk
+                // temp.title = this.meals[i].title
+                // temp.url = this.meals[i].url
+                // temp.image = this.meals[i].image
+                // temp.calories = this.meals[i].calories
+                // temp.cooktime = this.meals[i].cooktime
+                // temp.servings = this.meals[i].servings
+                // temp.fat = this.meals[i].fat
+                // temp.carb = this.meals[i].carb
+                // temp.pro = this.meals[i].pro
+                // temp.eaten_cals()
+                // this.meals[i] = temp
+                this.meals[i] = this.conv_meal(this.meals[i])
             }
+            // console.log('meals', this.meals)
             this.goal = this.owner.daily_calorie
             this.remaining_cal = this.goal - this.cal_tot
         },
+
+        conv_meal: function(meal_in) {
+            var temp = new Recipe()
+            temp.pk = meal_in.pk
+            temp.title = meal_in.title
+            temp.url = meal_in.url
+            temp.image = meal_in.image
+            temp.calories = meal_in.calories
+            temp.cooktime = meal_in.cooktime
+            temp.servings = meal_in.servings
+            temp.fat = meal_in.fat
+            temp.carb = meal_in.carb
+            temp.pro = meal_in.pro
+            temp.eaten_cals()
+            return temp
+        },
+
         getOwner: async function() {
             const response = await axios.get('api/user/')
             console.log('users api call', response)
@@ -216,6 +229,29 @@ const app = new Vue({
 
         add_sugg_to_meal: function() {
             pass
+        },
+
+        serv_modal_func: function(serv_index) {
+            this._modal_data = serv_index
+            // console.log('index', this._modal_data)
+        },
+
+        set_clear_serv_modal_data: async function() {
+            // cal_tot needs to be changed before it is converted to a new obj
+            console.log(this.meals[this._modal_data].eaten_cals())
+            this.meal = this.conv_meal(this.meals[this._modal_data])
+            // this.meal.pk = this.meals[this._modal_data].pk
+            // console.log(this.meal.pk)
+            this.meal.servings = this.modal_servings
+            
+            // delete old entry
+            this.cal_tot -= this.meals[this._modal_data].eaten_cals()
+            const response = await axios.delete(`api/meal/${this.meal.pk}/`)
+            console.log(response)
+            this.addMeal()
+
+            this._modal_data = null
+            this.modal_servings = 1
         },
 
         _parse_recipes: function(hits) {

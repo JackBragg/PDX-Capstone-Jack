@@ -14,10 +14,6 @@
 {% block content %}
 <p><a href="{% url 'logout' %}">logout</a></p>
 
-
-
-
-
 <div id='app' style='width:100%;'>
   <div class="meal-in">
     <div class='meal-input-field'>
@@ -53,23 +49,28 @@
       <div class="col-md-8">
         <div>
           <ul>
+            <!-- breakfast -->
+            <!-- ATTN: may be a bug resulting from key binding -->
             <li
-              v-for="meal, i in meals"
-              v-bind:key="i"
+              v-for="meal in breakfast_meals"
+              v-bind:key="meal.org_index"
             >
               <span> ${ meal.title } </span>
               <span class="left-brdr">Calories: ${ meal.eaten_cals() }</span>
               <span class="left-brdr">
-                <a v-on:click="serv_modal_func(i)" class="modal-trigger" href="#servings_modal">
+                <a v-on:click="serv_modal_func(meal.org_index)" class="modal-trigger" href="#servings_modal">
                   Servings: ${ meal.servings }
                 </a>
               </span>
               <div class='control-buttons left-brdr'>
-                <i v-on:click='removeMeal(i)'
+                <i v-on:click='removeMeal(meal.org_index)'
                 class='fas fa-times'
                 ></i>
               </div>    
             </li>
+
+            
+
           </ul>
           <ul>
             <li>

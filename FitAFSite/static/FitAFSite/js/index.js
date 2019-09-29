@@ -29,6 +29,8 @@ class User {
 
 class Recipe {
     constructor() {
+        // this is to keep remove_meal(org_index) working, do not access in model
+        this.org_index = 0
         this.title = ''
         this.url = ''
         this.image = ''
@@ -38,7 +40,7 @@ class Recipe {
         this.fat = 0.0
         this.carb = 0.0
         this.pro = 0.0
-        this.meal_time = ''
+        this.meal_time = 'breakfast'
 
         this.cals_consumed = 0
     }
@@ -66,6 +68,12 @@ const app = new Vue({
         recipe: new Recipe(),
         cal_tot: 0,
         meals: [],
+        breakfast_meals: [],
+        snack1_meals: [],
+        lunch_meals: [],
+        snack2_meals: [],
+        dinner_meals: [],
+        night_snack_meals: [],
         meal: new Recipe(),
         goal: 2000,
         remaining_cal: 0,
@@ -82,24 +90,27 @@ const app = new Vue({
 
     },
     methods: {
-        addMeal: async function(meal_time_in='breakfast') {
-            this.meal.meal_time = meal_time_in
+        addMeal: async function(meal_time_in=0) {
+            if (meal_time_in) {
+                this.meal.meal_time = meal_time_in
+            } else {
+                this.meal.meal_time = 'breakfast'
+            }
             if (this.cal_tot) {
                 this.cal_tot += this.meal.eaten_cals()
             }
             const response = await axios.post('api/meal/', this.meal)
-            console.log(response)
+            console.log('get resp', response)
             // // add meal to this.meals
             // this.meals.push({text: this.meal, completed: false})
             this.meal = new Recipe()
             this.getMeal()
         },
         removeMeal: async function(index) {
+            console.log('passed index', index)
             this.cal_tot -= this.meals[index].eaten_cals()
             const response = await axios.delete(`api/meal/${this.meals[index].pk}/`)
             console.log(response)            
-            // remove meal from this.meals
-            // this.meals.splice(index, 1)
             this.getMeal()
         },
 
@@ -114,15 +125,42 @@ const app = new Vue({
                 }
             }
             for (i=0; i < this.meals.length; i++) {
-                this.meals[i] = this.conv_meal(this.meals[i])
+                this.meals[i] = this.conv_meal(this.meals[i], i)
+                // assigns meals to meal times
+                console.log('bf', this.meals[i])
+                if (this.meals[i].meal_time === 'breakfast'){
+                    this.breakfast_meals.push(this.meals[i])
+                }
+                switch (this.meals[i].meal_time) {
+                    case 'breakfast':
+                        this.breakfast_meals.push(this.meals[i]);
+                        break;
+                    case 'snack1':
+                        this.snack1_meals.push(this.meals[i]);
+                        break;
+                    case 'lunch':
+                        this.lunch_meals.push(this.meals[i]);
+                        break;
+                    case 'snack2':
+                        this.snack2_meals.push(this.meals[i]);
+                        break;
+                    case 'dinner':
+                        this.dinner_meals.push(this.meals[i]);
+                        break;
+                    case 'night_snack':
+                        this.night_snack_meals.push(this.meals[i]);
+                        break;
+                }
             }
             // console.log('meals', this.meals)
             this.goal = this.owner.daily_calorie
             this.remaining_cal = this.goal - this.cal_tot
         },
 
-        conv_meal: function(meal_in) {
+        conv_meal: function(meal_in, org_index) {
             var temp = new Recipe()
+            // this is to keep remove_meal(org_index) working, do not access in model
+            temp.org_index = org_index
             temp.pk = meal_in.pk
             temp.title = meal_in.title
             temp.url = meal_in.url

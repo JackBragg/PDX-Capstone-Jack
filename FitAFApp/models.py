@@ -5,8 +5,8 @@ from django.utils import timezone
 
 class Meal(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL,blank=True, null=True, on_delete=models.CASCADE)
-    created_date = models.DateTimeField(default=timezone.now)
     
+    created_date = models.DateTimeField(default=timezone.now)
     title = models.CharField(max_length=200, blank=True, null=True)
     url = models.TextField(blank=True, null=True)
     image = models.TextField(blank=True, null=True)

@@ -15,7 +15,11 @@
 <p><a href="{% url 'logout' %}">logout</a></p>
 
 <div id='app' style='width:100%;'>
-  
+
+  <div class="container">
+    <input type="text" class="datepicker" v-model="date">
+  </div>
+        
   <div class="meal-in">
     <div class='meal-input-field'>
       <input 

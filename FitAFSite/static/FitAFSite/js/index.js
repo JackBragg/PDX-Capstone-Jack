@@ -2,6 +2,11 @@ axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
 document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.datepicker');
+    var calandar_instances = M.Datepicker.init(elems, {format : 'yyyy-mm-dd'})
+  });
+
+document.addEventListener('DOMContentLoaded', function() {
     var elems = document.querySelectorAll('.dropdown-trigger');
     var drop_instances = M.Dropdown.init(elems);
   });
@@ -31,6 +36,7 @@ class Recipe {
     constructor() {
         // this is to keep remove_meal(org_index) working, do not access in model
         this.org_index = 0
+        this.created_date = new Date()
         this.title = ''
         this.url = ''
         this.image = ''
@@ -86,6 +92,7 @@ const app = new Vue({
         modal_servings: 1,
         modal_data: [],
         add_meal_modal_data: '',
+        date: window.localStorage.date,
         api: 'https://api.edamam.com/search',
         app_id: '&app_id=',
         app_key: '&app_key=',
@@ -93,7 +100,7 @@ const app = new Vue({
     },
     methods: {
         addMeal: async function(meal_time_in) {
-  
+            // this.meal.created_date = {'year' : this.date.year, 'month' : this.date.month, 'day' : this.date.day}
             this.meal.meal_time = meal_time_in
             if (this.meals.length <= 1) {
                 this.cal_tot += this.meal.eaten_cals()
@@ -143,6 +150,8 @@ const app = new Vue({
         },
 
         getMeal: async function() {
+            // console.log('year' , this.date.getFullYear(), 'month' , this.date.month, 'day' , this.date.day)
+            // this.setDate()
             const response = await axios.get('api/meal/')
             // console.log('resp', response)
             this.meals = response.data
@@ -225,6 +234,10 @@ const app = new Vue({
             temp.meal_time = meal_in.meal_time
             temp.eaten_cals()
             return temp
+        },
+
+        setDate: function() {
+            window.localStorage.date = this.date
         },
 
         getOwner: async function() {
@@ -404,6 +417,9 @@ const app = new Vue({
         }
     },
     mounted: function() {
+        if (window.localStorage.date == undefined) {
+            window.localStorage.date = ''
+        }
         // USER assigned in base.html
         this.getOwner()
         this.getkeys()
@@ -413,5 +429,8 @@ const app = new Vue({
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // this.suggestion()
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    },
+    updated: function() {
+        window.localStorage.date = this.date
     }
 });

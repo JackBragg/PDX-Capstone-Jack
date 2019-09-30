@@ -23,6 +23,7 @@ def meal(request):
             meal = Meal()
             meal.owner = request.user
             meal.created_date = timezone.now()
+            # print('*'*60, request.created_date, '*'*60)
             # repeated below, could be own func
             meal.title = data['title']
             meal.url = data['url']

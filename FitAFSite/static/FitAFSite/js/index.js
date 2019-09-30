@@ -68,13 +68,13 @@ const app = new Vue({
         recipe: new Recipe(),
         cal_tot: 0,
         meals: [],
+        meal: new Recipe(),
         breakfast_meals: [],
         snack1_meals: [],
         lunch_meals: [],
         snack2_meals: [],
         dinner_meals: [],
         night_snack_meals: [],
-        meal: new Recipe(),
         goal: 2000,
         remaining_cal: 0,
         ingr_one: '',
@@ -82,23 +82,27 @@ const app = new Vue({
         ingr_three: '',
         ingr_four: '',
         search_cals: 0,
+        meal_search: '',
         modal_servings: 1,
-        _modal_data: null,
+        modal_data: [],
+        add_meal_modal_data: '',
         api: 'https://api.edamam.com/search',
         app_id: '&app_id=',
         app_key: '&app_key=',
 
     },
     methods: {
-        addMeal: async function(meal_time_in=0) {
-            if (meal_time_in) {
-                this.meal.meal_time = meal_time_in
-            } else {
-                this.meal.meal_time = 'breakfast'
-            }
-            if (this.cal_tot) {
+        addMeal: async function(meal_time_in) {
+  
+            this.meal.meal_time = meal_time_in
+            if (this.meals.length <= 1) {
                 this.cal_tot += this.meal.eaten_cals()
+            } else {
+                if (this.cal_tot > 1) {
+                    this.cal_tot += this.meal.eaten_cals()
+                }
             }
+            console.log('wtf', this.meal)
             const response = await axios.post('api/meal/', this.meal)
             console.log('get resp', response)
             // // add meal to this.meals
@@ -106,6 +110,30 @@ const app = new Vue({
             this.meal = new Recipe()
             this.getMeal()
         },
+
+        parse_removal_index: function(meal_section, index) {
+            switch (meal_section) {
+                case 'breakfast':
+                    this.removeMeal(this.breakfast_meals[index].org_index);
+                    break;
+                case 'snack1':
+                    this.removeMeal(this.snack1_meals[index].org_index);
+                    break;
+                case 'lunch':
+                    this.removeMeal(this.lunch_meals[index].org_index);
+                    break;
+                case 'snack2':
+                    this.removeMeal(this.snack2_meals[index].org_index);
+                    break;
+                case 'dinner':
+                    this.removeMeal(this.dinner_meals[index].org_index);
+                    break;
+                case 'night_snack':
+                    this.removeMeal(this.night_snack_meals[index].org_index);
+                    break;
+            }
+        },
+
         removeMeal: async function(index) {
             console.log('passed index', index)
             this.cal_tot -= this.meals[index].eaten_cals()
@@ -124,13 +152,16 @@ const app = new Vue({
                     this.cal_tot += this.meals[meal].calories
                 }
             }
+            this.breakfast_meals = []
+            this.snack1_meals = []
+            this.lunch_meals = []
+            this.snack2_meals = []
+            this.dinner_meals = []
+            this.night_snack_meals = []
             for (i=0; i < this.meals.length; i++) {
                 this.meals[i] = this.conv_meal(this.meals[i], i)
                 // assigns meals to meal times
                 console.log('bf', this.meals[i])
-                if (this.meals[i].meal_time === 'breakfast'){
-                    this.breakfast_meals.push(this.meals[i])
-                }
                 switch (this.meals[i].meal_time) {
                     case 'breakfast':
                         this.breakfast_meals.push(this.meals[i]);
@@ -161,6 +192,26 @@ const app = new Vue({
             var temp = new Recipe()
             // this is to keep remove_meal(org_index) working, do not access in model
             temp.org_index = org_index
+            temp.pk = meal_in.pk
+            temp.title = meal_in.title
+            temp.url = meal_in.url
+            temp.image = meal_in.image
+            temp.calories = meal_in.calories
+            temp.cooktime = meal_in.cooktime
+            temp.servings = meal_in.servings
+            temp.fat = meal_in.fat
+            temp.carb = meal_in.carb
+            temp.pro = meal_in.pro
+            temp.meal_time = meal_in.meal_time
+            temp.eaten_cals()
+            return temp
+        },
+
+        chng_meal_serv_size: function(meal_in) {
+            var temp = new Recipe()
+            console.log('meal in', meal_in)
+            // this is to keep remove_meal(org_index) working, do not access in model
+            temp.org_index = this.modal_data[0]
             temp.pk = meal_in.pk
             temp.title = meal_in.title
             temp.url = meal_in.url
@@ -255,30 +306,59 @@ const app = new Vue({
             console.log(this.recipe)
         },
 
-        add_sugg_to_meal: function() {
-            pass
+        set_add_meal_modal_data: function(meal_section) {
+            this.add_meal_modal_data = meal_section
         },
 
-        serv_modal_func: function(serv_index) {
-            this._modal_data = serv_index
-            // console.log('index', this._modal_data)
+        modal_add_meal: function() {
+            this.addMeal(this.add_meal_modal_data)
+            this.add_meal_modal_data = ''
+        },
+
+        serv_modal_func: function(meal_section, serv_index) {
+            console.log(this.modal_data)
+            switch (meal_section) {
+                case 'breakfast':
+                    this.modal_data.push(this.breakfast_meals[serv_index].org_index);
+                    this.modal_data.push('breakfast');
+                    break;
+                case 'snack1':
+                    this.modal_data.push(this.snack1_meals[serv_index].org_index);
+                    this.modal_data.push('snack1');
+                    break;
+                case 'lunch':
+                    this.modal_data.push(this.lunch_meals[serv_index].org_index);
+                    this.modal_data.push('lunch');
+                    break;
+                case 'snack2':
+                    this.modal_data.push(this.snack2_meals[serv_index].org_index);
+                    this.modal_data.push('snack2');
+                    break;
+                case 'dinner':
+                    this.modal_data.push(this.dinner_meals[serv_index].org_index);
+                    this.modal_data.push('dinner');
+                    break;
+                case 'night_snack':
+                    this.modal_data.push(this.night_snack_meals[serv_index].org_index);
+                    this.modal_data.push('night_snack');
+                    break;
+            }
+            console.log('index', this.modal_data)
         },
 
         set_clear_serv_modal_data: async function() {
-            // cal_tot needs to be changed before it is converted to a new obj
-            console.log(this.meals[this._modal_data].eaten_cals())
-            this.meal = this.conv_meal(this.meals[this._modal_data])
-            // this.meal.pk = this.meals[this._modal_data].pk
-            // console.log(this.meal.pk)
+            console.log('set_clear_serv...', this.modal_data[0])
+            this.cal_tot -= this.meals[this.modal_data[0]].eaten_cals()
+            this.meal = this.chng_meal_serv_size(this.meals[this.modal_data[0]])
             this.meal.servings = this.modal_servings
             
+            // cal_tot needs to be changed before it is converted to a new obj
             // delete old entry
-            this.cal_tot -= this.meals[this._modal_data].eaten_cals()
             const response = await axios.delete(`api/meal/${this.meal.pk}/`)
             console.log(response)
-            this.addMeal()
+            this.addMeal(this.modal_data[1])
 
-            this._modal_data = null
+            this.modal_data = []
             this.modal_servings = 1
         },
 

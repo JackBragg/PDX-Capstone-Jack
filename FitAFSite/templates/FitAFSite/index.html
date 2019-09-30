@@ -15,6 +15,7 @@
 <p><a href="{% url 'logout' %}">logout</a></p>
 
 <div id='app' style='width:100%;'>
+  
   <div class="meal-in">
     <div class='meal-input-field'>
       <input 
@@ -34,44 +35,186 @@
       type="number" 
       placeholder='Servings for entire meal'>
     </div>
-
+<!-- changes based on which meal header is selected -->
     <div>
       <button
-        v-on:click='addMeal'
+        v-on:click='addMeal("breakfast")'
         id='btn-add'
       >
         <i class='fas fa-plus'></i>                    
       </button>
     </div>
   </div>
+
   <div class="meal-log">
     <div class="row">
       <div class="col-md-8">
         <div>
+
           <ul>
             <!-- breakfast -->
-            <!-- ATTN: may be a bug resulting from key binding -->
+            <li style="border-bottom: 1px solid black; background-color: rgb(43, 226, 195)">
+              <span>Breakfast</span>
+              <i
+                v-on:click="set_add_meal_modal_data('breakfast')" 
+                class='modal-trigger fas fa-plus'
+                href="#add_meal_modal"
+                ></i>
+            </li>
             <li
-              v-for="meal in breakfast_meals"
-              v-bind:key="meal.org_index"
+              v-for="mealz, i in breakfast_meals"
+              v-bind:key="i"
             >
-              <span> ${ meal.title } </span>
-              <span class="left-brdr">Calories: ${ meal.eaten_cals() }</span>
+              <span> ${ mealz.title } </span>
+              <span class="left-brdr">Calories: ${ mealz.eaten_cals() }</span>
               <span class="left-brdr">
-                <a v-on:click="serv_modal_func(meal.org_index)" class="modal-trigger" href="#servings_modal">
-                  Servings: ${ meal.servings }
+                <a v-on:click="serv_modal_func('breakfast', i)" class="modal-trigger" href="#servings_modal">
+                  Servings: ${ mealz.servings }
                 </a>
               </span>
               <div class='control-buttons left-brdr'>
-                <i v-on:click='removeMeal(meal.org_index)'
+                <i v-on:click='parse_removal_index("breakfast", i)'
                 class='fas fa-times'
                 ></i>
               </div>    
             </li>
 
-            
-
+            <!-- snack1 -->
+            <li style="border-bottom: 1px solid black; background-color: rgb(43, 226, 195)">
+              <span>Snack</span>
+              <i
+                v-on:click="set_add_meal_modal_data('snack1')" 
+                class='modal-trigger fas fa-plus'
+                href="#add_meal_modal"
+                ></i>
+            </li>
+            <li
+              v-for="mealz, i in snack1_meals"
+              v-bind:key="i"
+            >
+              <span> ${ mealz.title } </span>
+              <span class="left-brdr">Calories: ${ mealz.eaten_cals() }</span>
+              <span class="left-brdr">
+                <a v-on:click="serv_modal_func('snack1', i)" class="modal-trigger" href="#servings_modal">
+                  Servings: ${ mealz.servings }
+                </a>
+              </span>
+              <div class='control-buttons left-brdr'>
+                <i v-on:click='parse_removal_index("snack1", i)'
+                class='fas fa-times'
+                ></i>
+              </div>    
+            </li>
+          
+            <!-- lunch -->
+            <li style="border-bottom: 1px solid black; background-color: rgb(43, 226, 195)">
+              <span>Lunch</span>
+              <i
+                v-on:click="set_add_meal_modal_data('lunch')" 
+                class='modal-trigger fas fa-plus'
+                href="#add_meal_modal"
+                ></i>
+            </li>
+            <li
+              v-for="mealz, i in lunch_meals"
+              v-bind:key="i"
+            >
+              <span> ${ mealz.title } </span>
+              <span class="left-brdr">Calories: ${ mealz.eaten_cals() }</span>
+              <span class="left-brdr">
+                <a v-on:click="serv_modal_func('lunch', i)" class="modal-trigger" href="#servings_modal">
+                  Servings: ${ mealz.servings }
+                </a>
+              </span>
+              <div class='control-buttons left-brdr'>
+                <i v-on:click='parse_removal_index("lunch", i)'
+                class='fas fa-times'
+                ></i>
+              </div>    
+            </li>
+          
+            <!-- snack2 -->
+            <li style="border-bottom: 1px solid black; background-color: rgb(43, 226, 195)">
+              <span>Snack</span>
+              <i
+                v-on:click="set_add_meal_modal_data('snack2')" 
+                class='modal-trigger fas fa-plus'
+                href="#add_meal_modal"
+                ></i>
+            </li>
+            <li
+              v-for="mealz, i in snack2_meals"
+              v-bind:key="i"
+            >
+              <span> ${ mealz.title } </span>
+              <span class="left-brdr">Calories: ${ mealz.eaten_cals() }</span>
+              <span class="left-brdr">
+                <a v-on:click="serv_modal_func('snack2', i)" class="modal-trigger" href="#servings_modal">
+                  Servings: ${ mealz.servings }
+                </a>
+              </span>
+              <div class='control-buttons left-brdr'>
+                <i v-on:click='parse_removal_index("snack2", i)'
+                class='fas fa-times'
+                ></i>
+              </div>    
+            </li>
+          
+            <!-- dinner -->
+            <li style="border-bottom: 1px solid black; background-color: rgb(43, 226, 195)">
+              <span>Dinner</span>
+              <i
+                v-on:click="set_add_meal_modal_data('dinner')" 
+                class='modal-trigger fas fa-plus'
+                href="#add_meal_modal"
+                ></i>
+            </li>
+            <li
+              v-for="mealz, i in dinner_meals"
+              v-bind:key="i"
+            >
+              <span> ${ mealz.title } </span>
+              <span class="left-brdr">Calories: ${ mealz.eaten_cals() }</span>
+              <span class="left-brdr">
+                <a v-on:click="serv_modal_func('dinner', i)" class="modal-trigger" href="#servings_modal">
+                  Servings: ${ mealz.servings }
+                </a>
+              </span>
+              <div class='control-buttons left-brdr'>
+                <i v-on:click='parse_removal_index("dinner", i)'
+                class='fas fa-times'
+                ></i>
+              </div>    
+            </li>
+          
+            <!-- night_snack -->
+            <li style="border-bottom: 1px solid black; background-color: rgb(43, 226, 195)">
+              <span>Late Night Snack</span>
+              <i
+                v-on:click="set_add_meal_modal_data('night_snack')" 
+                class='modal-trigger fas fa-plus'
+                href="#add_meal_modal"
+                ></i>
+            </li>
+            <li
+              v-for="mealz, i in night_snack_meals"
+              v-bind:key="i"
+            >
+              <span> ${ mealz.title } </span>
+              <span class="left-brdr">Calories: ${ mealz.eaten_cals() }</span>
+              <span class="left-brdr">
+                <a v-on:click="serv_modal_func('night_snack', i)" class="modal-trigger" href="#servings_modal">
+                  Servings: ${ mealz.servings }
+                </a>
+              </span>
+              <div class='control-buttons left-brdr'>
+                <i v-on:click='parse_removal_index("night_snack", i)'
+                class='fas fa-times'
+                ></i>
+              </div>    
+            </li>
           </ul>
+
           <ul>
             <li>
               <span> Total Calories </span>
@@ -86,8 +229,28 @@
   <a class="waves-effect waves-light btn modal-trigger" href="#modal1">User Data</a>
   <a class="waves-effect waves-light btn modal-trigger" href="#modal2">Search Me!</a>
   
-<!-- Servings Modal -->
-<div id="servings_modal" class="modal">
+  <!-- Add Meal Modal -->
+  <div id="add_meal_modal" class="modal">
+  <div class="modal-content">
+      <input 
+      type="number"
+      id="in_meal"
+      v-model='meal_search'
+    >
+  </div>
+  <div class="modal-footer">
+    <a 
+      v-on:click='modal_add_meal'  
+      href="#!" 
+      class="modal-close waves-effect waves-green btn-flat"
+    >
+    Done
+    </a>
+  </div>  
+  </div>
+
+  <!-- Servings Modal -->
+  <div id="servings_modal" class="modal">
   <div class="modal-content">
       <input 
       type="number"
@@ -104,10 +267,10 @@
     Done
     </a>
   </div>  
-</div>
+  </div>
 
 
-<!-- User Modal -->
+  <!-- User Modal -->
   <div id="modal1" class="modal">
     <div class="modal-content">
         <h1> ${ owner.username } </h1>

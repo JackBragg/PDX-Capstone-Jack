@@ -19,6 +19,7 @@ def meal(request):
         if request.method == 'POST':
             # deserialize json string
             data = json.loads(request.body)
+            print('data', data)
             meal = Meal()
             meal.owner = request.user
             meal.created_date = timezone.now()

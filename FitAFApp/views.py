@@ -9,7 +9,7 @@ import json, csv
 from FitAF import secret
 
 
-def meal(request):
+def meal(request, date_in):
     '''
     api endpoint for meal
     '''
@@ -22,8 +22,13 @@ def meal(request):
             print('data', data)
             meal = Meal()
             meal.owner = request.user
-            meal.created_date = timezone.now()
-            # print('*'*60, request.created_date, '*'*60)
+            # meal.created_date = datetime.now()
+            yr=int(date_in[0:4])
+            mnth=int(date_in[5:7])
+            dy=int(date_in[8:])
+            meal.created_date = datetime.now().replace(year=yr, month=mnth, day=dy)
+            
+            print('*'*60, meal.created_date, '*'*60)
             # repeated below, could be own func
             meal.title = data['title']
             meal.url = data['url']
@@ -41,8 +46,13 @@ def meal(request):
 
         if request.method == 'GET':
             # filter by meals by user
-            today = timezone.now().replace(hour=0, minute=0, second=0)
-            meals = Meal.objects.filter(owner=request.user, created_date__gte=(today)).order_by('-created_date')
+            # print('*'*60, date_in, '*'*60)
+            yr=int(date_in[0:4])
+            mnth=int(date_in[5:7])
+            dy=int(date_in[8:])
+            today = datetime.now().replace(year=yr, month=mnth, day=dy, hour=0, minute=0, second=0)
+            tomorrow = datetime.now().replace(year=yr, month=mnth, day=dy, hour=23, minute=59, second=59)
+            meals = Meal.objects.filter(owner=request.user, created_date__gte=(today), created_date__lte=(tomorrow)).order_by('-created_date')
             meal_list = []
             for meal in meals:
                 meal_dict = {
@@ -69,6 +79,7 @@ def meal(request):
     return HttpResponse('User not authenticated', status=401)
 
 def meal_d(request, pk):
+    print('BOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOGERS')
     if request.user.is_authenticated:
         meal = get_object_or_404(Meal, pk=pk)
         if request.method == 'DELETE':

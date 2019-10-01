@@ -2,16 +2,8 @@ axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
 document.addEventListener('DOMContentLoaded', function() {
-    var elems = document.querySelectorAll('.datepicker');
-    var calandar_instances = M.Datepicker.init(elems, {format : 'yyyy-mm-dd'})
-  });
-
-document.addEventListener('DOMContentLoaded', function() {
     var elems = document.querySelectorAll('.dropdown-trigger');
     var drop_instances = M.Dropdown.init(elems);
-  });
-    
-document.addEventListener('DOMContentLoaded', function() {
     var elem = document.querySelectorAll('.modal');
     var modal_instance = M.Modal.init(elem);
   });
@@ -92,7 +84,7 @@ const app = new Vue({
         modal_servings: 1,
         modal_data: [],
         add_meal_modal_data: '',
-        date: window.localStorage.date,
+        date: new Date(),
         api: 'https://api.edamam.com/search',
         app_id: '&app_id=',
         app_key: '&app_key=',
@@ -100,18 +92,10 @@ const app = new Vue({
     },
     methods: {
         addMeal: async function(meal_time_in) {
-            // this.meal.created_date = {'year' : this.date.year, 'month' : this.date.month, 'day' : this.date.day}
             this.meal.meal_time = meal_time_in
-            if (this.meals.length <= 1) {
-                this.cal_tot += this.meal.eaten_cals()
-            } else {
-                if (this.cal_tot > 1) {
-                    this.cal_tot += this.meal.eaten_cals()
-                }
-            }
             console.log('wtf', this.meal)
-            const response = await axios.post('api/meal/', this.meal)
-            console.log('get resp', response)
+            var input = 'api/meal/' + this.date + '/'
+            const response = await axios.post(input, this.meal)
             // // add meal to this.meals
             // this.meals.push({text: this.meal, completed: false})
             this.meal = new Recipe()
@@ -142,33 +126,44 @@ const app = new Vue({
         },
 
         removeMeal: async function(index) {
-            console.log('passed index', index)
-            this.cal_tot -= this.meals[index].eaten_cals()
-            const response = await axios.delete(`api/meal/${this.meals[index].pk}/`)
+            console.log('passed index', this.meals[index].pk)
+            const response = await axios.delete(`api/meald/${this.meals[index].pk}/`)
+
             console.log(response)            
             this.getMeal()
         },
 
         getMeal: async function() {
-            // console.log('year' , this.date.getFullYear(), 'month' , this.date.month, 'day' , this.date.day)
-            // this.setDate()
-            const response = await axios.get('api/meal/')
+            // +JSON.stringify(this.date)
+
+            if (typeof(this.date) == typeof(new Date())) {
+                console.log('BOOOOOOO', this.date)
+                var year = this.date.getFullYear().toString()
+                var month = (this.date.getMonth() + 1).toString()
+                if (month.length != 2) {
+                    month = '0' + month
+                }
+                var day = this.date.getDate().toString()
+                if (day.length != 1) {
+                    day = '0' + day
+                }
+                this.date = year + '-' + month + '-' + day
+            }
+            var input = 'api/meal/' + this.date + '/'
+            console.log(input)
+            const response = await axios.get(input)
             // console.log('resp', response)
             this.meals = response.data
-            // if page load add all together
-            if (!this.cal_tot) {
-                for (meal in this.meals) {
-                    this.cal_tot += this.meals[meal].calories
-                }
-            }
             this.breakfast_meals = []
             this.snack1_meals = []
             this.lunch_meals = []
             this.snack2_meals = []
             this.dinner_meals = []
             this.night_snack_meals = []
+            this.cal_tot = 0
             for (i=0; i < this.meals.length; i++) {
                 this.meals[i] = this.conv_meal(this.meals[i], i)
+                this.cal_tot += this.meals[i].eaten_cals()
                 // assigns meals to meal times
                 console.log('bf', this.meals[i])
                 switch (this.meals[i].meal_time) {
@@ -201,6 +196,7 @@ const app = new Vue({
             var temp = new Recipe()
             // this is to keep remove_meal(org_index) working, do not access in model
             temp.org_index = org_index
+            console.log('GELLO')
             temp.pk = meal_in.pk
             temp.title = meal_in.title
             temp.url = meal_in.url
@@ -236,8 +232,19 @@ const app = new Vue({
             return temp
         },
 
-        setDate: function() {
-            window.localStorage.date = this.date
+        get_date: function() {
+            if (window.localStorage.date != null) {
+                return new Date(window.localStorage.date)
+            } else {
+                this.date = new Date()
+                this.setDate()
+                return this.date
+            }
+        },
+
+        set_date: function() {
+            
+            this.new_date = calendar.toString()
         },
 
         getOwner: async function() {
@@ -417,9 +424,7 @@ const app = new Vue({
         }
     },
     mounted: function() {
-        if (window.localStorage.date == undefined) {
-            window.localStorage.date = ''
-        }
+        this.get_date()
         // USER assigned in base.html
         this.getOwner()
         this.getkeys()

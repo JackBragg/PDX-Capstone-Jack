@@ -230,27 +230,59 @@
     </div>
   </div>
   
-  <a class="waves-effect waves-light btn modal-trigger" href="#modal1">User Data</a>
-  <a class="waves-effect waves-light btn modal-trigger" href="#modal2">Search Me!</a>
+  <a class="waves-effect waves-light btn modal-trigger" href="#user_modal">User Data</a>
+  <a class="waves-effect waves-light btn modal-trigger" href="#search_modal">Search Me!</a>
   
   <!-- Add Meal Modal -->
   <div id="add_meal_modal" class="modal">
   <div class="modal-content">
       <input 
-      type="number"
+      type="text"
       id="in_meal"
       v-model='meal_search'
     >
   </div>
   <div class="modal-footer">
     <a 
-      v-on:click='modal_add_meal'  
-      href="#!" 
-      class="modal-close waves-effect waves-green btn-flat"
+      v-on:click='food_search'  
+      href="#add_meal_search_modal" 
+      class="modal-close waves-effect waves-green btn-flat modal-trigger"
     >
     Done
     </a>
   </div>  
+  </div>
+
+<!-- add_meal search results -->
+  <div id="add_meal_search_modal" class="modal">
+    <div class="modal-content">
+      <ul>
+        <li
+          v-for="meal, i in search_results"
+          v-bind:key="i"
+        >
+          <a @click='create_add_food(meal)' class='modal-close'>
+            <img v-bind:src=meal.food.image alt="XO">
+          </a>
+          <span> ${ meal.food.label } </span>
+          <span class="left-brdr">Calories: ${ meal.food.nutrients.ENERC_KCAL }</span>
+          <div class='control-buttons left-brdr'>
+            <i v-on:click='create_add_food(meal)'
+            class='fas fa-plus modal-close'
+            ></i>
+          </div>    
+        </li>
+      </ul>
+    </div>
+    <div class="modal-footer">
+      <a 
+        v-on:click='modal_add_meal'  
+        href="#!" 
+        class="modal-close waves-effect waves-green btn-flat"
+      >
+      Done
+      </a>
+    </div>  
   </div>
 
   <!-- Servings Modal -->
@@ -275,7 +307,7 @@
 
 
   <!-- User Modal -->
-  <div id="modal1" class="modal">
+  <div id="user_modal" class="modal">
     <div class="modal-content">
         <h1> ${ owner.username } </h1>
         <div class='Biometrics col' style="border: 10px solid blue">
@@ -354,7 +386,7 @@
   </div> <!-- end User Modal -->
 
   <!-- Search Modal -->
-  <div id="modal2" class="modal" style="height: 400px; width: 1000px;">
+  <div id="search_modal" class="modal" style="height: 400px; width: 1000px;">
     <div class="modal-content">
       <div class="search-box">
         <div class="search-ingrs">

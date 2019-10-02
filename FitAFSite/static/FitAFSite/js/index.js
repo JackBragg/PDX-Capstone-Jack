@@ -46,7 +46,8 @@ class Recipe {
     eaten_cals() {
         // if (!this.cals_consumed) {    
         if ((this.calories > 0) && (this.servings > 0)){
-            this.cals_consumed = Math.floor(this.calories * this.servings)     
+            this.cals_consumed = Math.floor(this.calories * this.servings) 
+            console.log('eat at joes 1', this.cals_consumed)    
         } else {
             this.cals_consumed = this.calories
             this.servings = 1
@@ -81,16 +82,30 @@ const app = new Vue({
         ingr_four: '',
         search_cals: 0,
         meal_search: '',
+        search_results: [],
         modal_servings: 1,
         modal_data: [],
         add_meal_modal_data: '',
         date: new Date(),
-        api: 'https://api.edamam.com/search',
-        app_id: '&app_id=',
-        app_key: '&app_key=',
+        food_api: 'https://api.edamam.com/api/food-database/parser',
+        sugg_api: 'https://api.edamam.com/search',
+        recipe_app_id : '&app_id=',
+        recipe_app_key : '&app_key=',
+        food_app_id : '&app_id=',
+        food_app_key : '&app_key=',
+
 
     },
     methods: {
+        create_add_food: function(food) {
+            this.meal_search = food
+        },
+
+        modal_add_meal: function() {
+            this.addMeal(this.add_meal_modal_data)
+            this.add_meal_modal_data = ''
+        },
+
         addMeal: async function(meal_time_in) {
             this.meal.meal_time = meal_time_in
             console.log('wtf', this.meal)
@@ -133,9 +148,7 @@ const app = new Vue({
             this.getMeal()
         },
 
-        getMeal: async function() {
-            // +JSON.stringify(this.date)
-
+        set_date: function() {
             if (typeof(this.date) == typeof(new Date())) {
                 console.log('BOOOOOOO', this.date)
                 var year = this.date.getFullYear().toString()
@@ -149,6 +162,10 @@ const app = new Vue({
                 }
                 this.date = year + '-' + month + '-' + day
             }
+        },
+
+        getMeal: async function() {
+            this.set_date()
             var input = 'api/meal/' + this.date + '/'
             console.log(input)
             const response = await axios.get(input)
@@ -210,41 +227,6 @@ const app = new Vue({
             temp.meal_time = meal_in.meal_time
             temp.eaten_cals()
             return temp
-        },
-
-        chng_meal_serv_size: function(meal_in) {
-            var temp = new Recipe()
-            console.log('meal in', meal_in)
-            // this is to keep remove_meal(org_index) working, do not access in model
-            temp.org_index = this.modal_data[0]
-            temp.pk = meal_in.pk
-            temp.title = meal_in.title
-            temp.url = meal_in.url
-            temp.image = meal_in.image
-            temp.calories = meal_in.calories
-            temp.cooktime = meal_in.cooktime
-            temp.servings = meal_in.servings
-            temp.fat = meal_in.fat
-            temp.carb = meal_in.carb
-            temp.pro = meal_in.pro
-            temp.meal_time = meal_in.meal_time
-            temp.eaten_cals()
-            return temp
-        },
-
-        get_date: function() {
-            if (window.localStorage.date != null) {
-                return new Date(window.localStorage.date)
-            } else {
-                this.date = new Date()
-                this.setDate()
-                return this.date
-            }
-        },
-
-        set_date: function() {
-            
-            this.new_date = calendar.toString()
         },
 
         getOwner: async function() {
@@ -318,7 +300,7 @@ const app = new Vue({
             
             // TODO add in diet restrictions
             // Edamam API call
-            get = this.api + ingr + this.app_id + this.app_key + rCals
+            get = this.sugg_api + ingr + this.app_id + this.app_key + rCals
             const response = await axios.get(get)
             
             // Filter results
@@ -326,15 +308,27 @@ const app = new Vue({
             console.log(this.recipe)
         },
 
+        food_search: async function() {
+            // var use_NLP = '?nutrition-type=logging&'
+            this.meal_search = this.meal_search.toLowerCase()
+            var ingr = this.meal_search.split(' ')
+            console.log('food search ingr1', ingr)
+            ingr = '?ingr=' + ingr.join('%20')
+            console.log('food search ingr2', ingr)
+            // get = this.food_api + use_NLP + ingr + this.app_id + this.app_key
+            get = this.food_api + ingr + this.food_app_id + this.food_app_key
+            console.log('food search get', get)
+            const response = await axios.get(get)
+            console.log('food search response', response)
+            this.search_results = response.data.hints
+            // this.search_results = response
+        },
+
         set_add_meal_modal_data: function(meal_section) {
             this.add_meal_modal_data = meal_section
         },
 
-        modal_add_meal: function() {
-            this.addMeal(this.add_meal_modal_data)
-            this.add_meal_modal_data = ''
-        },
-
+        // serving size
         serv_modal_func: function(meal_section, serv_index) {
             console.log(this.modal_data)
             switch (meal_section) {
@@ -374,12 +368,32 @@ const app = new Vue({
             
             // cal_tot needs to be changed before it is converted to a new obj
             // delete old entry
-            const response = await axios.delete(`api/meal/${this.meal.pk}/`)
+            const response = await axios.delete(`api/meald/${this.meal.pk}/`)
             console.log(response)
             this.addMeal(this.modal_data[1])
 
             this.modal_data = []
             this.modal_servings = 1
+        },
+
+        chng_meal_serv_size: function(meal_in) {
+            var temp = new Recipe()
+            console.log('meal in', meal_in)
+            // this is to keep remove_meal(org_index) working, do not access in model
+            temp.org_index = this.modal_data[0]
+            temp.pk = meal_in.pk
+            temp.title = meal_in.title
+            temp.url = meal_in.url
+            temp.image = meal_in.image
+            temp.calories = meal_in.calories
+            temp.cooktime = meal_in.cooktime
+            temp.servings = meal_in.servings
+            temp.fat = meal_in.fat
+            temp.carb = meal_in.carb
+            temp.pro = meal_in.pro
+            temp.meal_time = meal_in.meal_time
+            temp.eaten_cals()
+            return temp
         },
 
         _parse_recipes: function(hits) {
@@ -419,12 +433,14 @@ const app = new Vue({
         // grabs api keys
         getkeys: async function() {
             const response = await axios.get('api/keys/')
-            this.app_id += response.data.api_id
-            this.app_key += response.data.api_key
+            this.recipe_app_id += response.data.recipe_api_id
+            this.recipe_app_key += response.data.recipe_api_key
+            this.food_app_id += response.data.food_api_id
+            this.food_app_key += response.data.food_api_key
         }
     },
     mounted: function() {
-        this.get_date()
+        this.set_date()
         // USER assigned in base.html
         this.getOwner()
         this.getkeys()

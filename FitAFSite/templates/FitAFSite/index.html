@@ -19,36 +19,7 @@
   <div class='container'>
     Date: <input type="date" name="bday" v-model='date' v-on:change="getMeal">
   </div>
-        
-  <div class="meal-in">
-    <div class='meal-input-field'>
-      <input 
-      v-model='meal.title' 
-      type="text" 
-      placeholder='meal name'>
-    </div>
-    <div class='meal-input-field'>
-      <input 
-      v-model='meal.calories'
-      type="number" 
-      placeholder='calorie count for entire meal'>
-    </div>
-    <div class='meal-input-field'>
-      <input 
-      v-model='meal.servings'
-      type="number" 
-      placeholder='Servings for entire meal'>
-    </div>
-<!-- changes based on which meal header is selected -->
-    <div>
-      <button
-        v-on:click='addMeal("breakfast")'
-        id='btn-add'
-      >
-        <i class='fas fa-plus'></i>                    
-      </button>
-    </div>
-  </div>
+      
 
   <div class="meal-log">
     <div class="row">
@@ -235,25 +206,25 @@
   
   <!-- Add Meal Modal -->
   <div id="add_meal_modal" class="modal">
-  <div class="modal-content">
+    <div class="modal-content">
       <input 
-      type="text"
-      id="in_meal"
-      v-model='meal_search'
-    >
-  </div>
-  <div class="modal-footer">
-    <a 
-      v-on:click='food_search'  
-      href="#add_meal_search_modal" 
-      class="modal-close waves-effect waves-green btn-flat modal-trigger"
-    >
-    Done
-    </a>
-  </div>  
-  </div>
+        type="text"
+        id="in_meal"
+        v-model='meal_search'
+      >
+    </div>
+    <div class="modal-footer">
+      <a 
+        v-on:click='food_search'  
+        href="#add_meal_search_modal" 
+        class="modal-close waves-effect waves-green btn-flat modal-trigger"
+      >
+      Done
+      </a>
+    </div>  
+  </div> <!-- end Add Meal Modal -->
 
-<!-- add_meal search results -->
+  <!-- add_meal search results -->
   <div id="add_meal_search_modal" class="modal">
     <div class="modal-content">
       <ul>
@@ -283,7 +254,7 @@
       Done
       </a>
     </div>  
-  </div>
+  </div> <!-- end add_meal search results -->
 
   <!-- Servings Modal -->
   <div id="servings_modal" class="modal">
@@ -305,7 +276,66 @@
   </div>  
   </div>
 
+  
+  <!-- Search Modal -->
+  <div id="search_modal" class="modal" style="height: 400px; width: 1000px;">
+      <div class="modal-content">
+        <div class="search-box">
+          <div class="search-ingrs">
+            <label for="ingr_one">Ingredient One</label>
+            <input v-model="ingr_one" type="text" id="ingr_one">
+            <label for="ingr_two">Ingredient Two</label>
+            <input v-model="ingr_two" type="text" id="ingr_two">
+            <label for="ingr_three">Ingredient Three</label>
+            <input v-model="ingr_three" type="text" id="ingr_three">
+            <label for="ingr_four">Ingredient Four</label>
+            <input v-model="ingr_four" type="text" id="ingr_four">
+          </div>
+          <div class="search-cooktime">
+            <label for="cooktime">Cook Time:</label>
+            <input v-model="recipe.cooktime" type="number" id="cooktime">
+          </div>
+          <div class="search-cal">
+            <label for="search-cals">Calories:</label>
+            <input v-model="recipe.cooktime" type="number" id="search-cals">
+          </div>
+          <div id='suggestionBox' style="background-size: contain; max-height: 100px; max-width: 100px;">    
+            <a v-bind:href="recipe.url">
+              <img v-bind:src='recipe.image' alt=""> 
+            </a> 
+          </div>
+          <div id='sugg-info-card'>
+            <p> ${recipe.title} </p>
+            <p>Calories: ${ recipe.tot_calories } </p>
+            <p>Servings made: ${ recipe.tot_serv } </p>
+            <p>Fat: ${ recipe.fat } </p>
+            <p>Carb: ${ recipe.carb } </p>
+            <p>Protein: ${ recipe.pro } </p>
 
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+      <a v-on:click='suggestion' class="waves-effect waves-green btn-flat">Search</a>
+      <a href="#recipe_choose_mealtime_modal" class="modal-close waves-effect waves-green btn-flat modal-trigger">Add</a>
+    </div> 
+  </div> <!-- end Serch Modal -->
+
+  <!-- recipe choose modal -->
+  <div id="recipe_choose_mealtime_modal" class='modal'>  
+    <div class='modal-content'>
+      <button v-on:click="search_modal_handler('breakfast')" class='modal-close'>Breakfast</button>
+      <button v-on:click="search_modal_handler('snack1')" class='modal-close'>Snack 1</button>
+      <button v-on:click="search_modal_handler('lunch')" class='modal-close'>Lunch</button>
+      <button v-on:click="search_modal_handler('snack2')" class='modal-close'>Snack 2</button>
+      <button v-on:click="search_modal_handler('dinner')" class='modal-close'>Dinner</button>
+      <button v-on:click="search_modal_handler('night_snack')" class='modal-close'>Late Night Snack</button>
+    </div>
+    <div class='modal-footer'>
+      
+    </div>
+  </div><!-- end recipe choose modal -->
+  
   <!-- User Modal -->
   <div id="user_modal" class="modal">
     <div class="modal-content">
@@ -329,9 +359,9 @@
             id="age"
             v-model = 'owner.age'
           >
-
+  
           <a class='dropdown-trigger btn' href='#' data-target='dropdown1'>activity level</a>
-
+  
           <!-- Dropdown Structure -->
           <ul id='dropdown1' class='dropdown-content'>
             <li><a v-on:click="owner.activity = 1.2" href="#!">sedentary</a></li>
@@ -340,15 +370,15 @@
             <li><a v-on:click="owner.activity = 1.725" href="#!">very active</a></li>
             <li><a v-on:click="owner.activity = 1.9" href="#!">extra active</a></li>
           </ul>
-
+  
           <a class='dropdown-trigger btn' href='#' data-target='dropdown2'>Gender</a>
-
+  
           <!-- Dropdown Structure -->
           <ul id='dropdown2' class='dropdown-content'>
             <li><a v-on:click="owner.gender = 0" href="#!">Female</a></li>
             <li><a v-on:click="owner.gender = 1"  href="#!">Male</a></li>
           </ul>
-
+  
         </div>
         <label for="goals">goals</label>
         <div id="goals" class="col" style="border: 10px solid green">
@@ -384,50 +414,7 @@
         <a v-on:click='modOwner'  href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
     </div>
   </div> <!-- end User Modal -->
-
-  <!-- Search Modal -->
-  <div id="search_modal" class="modal" style="height: 400px; width: 1000px;">
-    <div class="modal-content">
-      <div class="search-box">
-        <div class="search-ingrs">
-          <label for="ingr_one">Ingredient One</label>
-          <input v-model="ingr_one" type="text" id="ingr_one">
-          <label for="ingr_two">Ingredient Two</label>
-          <input v-model="ingr_two" type="text" id="ingr_two">
-          <label for="ingr_three">Ingredient Three</label>
-          <input v-model="ingr_three" type="text" id="ingr_three">
-          <label for="ingr_four">Ingredient Four</label>
-          <input v-model="ingr_four" type="text" id="ingr_four">
-        </div>
-        <div class="search-cooktime">
-          <label for="cooktime">Cook Time:</label>
-          <input v-model="recipe.cooktime" type="number" id="cooktime">
-        </div>
-        <div class="search-diet">
-<!-- drop down selection -->
-        </div>
-        <div class="search-cal">
-          <label for="search-cals">Calories:</label>
-          <input v-model="recipe.cooktime" type="number" id="search-cals">
-        </div>
-        <div class='search-macros'>
-<!-- three macro fields -->
-        </div>
-        <div id='suggestionBox' style="background-size: contain; max-height: 100px; max-width: 100px;">    
-          <a v-bind:href="recipe.url">
-            <img v-bind:src='recipe.image' alt=""> 
-          </a> 
-        </div>
-      
-      </div>
-
-    </div>
-    <div class="modal-footer">
-      <a v-on:click='suggestion'  href="#!" class="waves-effect waves-green btn-flat">Search</a>
-      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
-    </div>
-  </div>  <!-- end Serch Modal -->
-
+  
 </div> <!-- end app -->
 {% endblock content %}
 

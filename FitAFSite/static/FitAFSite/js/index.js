@@ -47,7 +47,7 @@ class Recipe {
         // if (!this.cals_consumed) {    
         if ((this.calories > 0) && (this.servings > 0)){
             this.cals_consumed = Math.floor(this.calories * this.servings) 
-            console.log('eat at joes 1', this.cals_consumed)    
+            // console.log('eaten_cals', this.cals_consumed)    
         } else {
             this.cals_consumed = this.calories
             this.servings = 1
@@ -97,8 +97,28 @@ const app = new Vue({
 
     },
     methods: {
-        create_add_food: function(food) {
-            this.meal_search = food
+        create_add_food: function(meal_in) {
+            // this is to keep remove_meal(org_index) working, do not access in model
+            this.meal.title = meal_in.food.label
+            if (meal_in.food.image != null) {
+                this.meal.image = meal_in.food.image
+            } else {
+                this.meal.image = 'XO'
+            }
+            this.meal.calories = Math.floor(meal_in.food.nutrients.ENERC_KCAL)
+            this.meal.servings = 1
+            if (meal_in.food.nutrients.FAT != null){
+                this.meal.fat = meal_in.food.nutrients.FAT
+            }
+            if (meal_in.food.nutrients.CHOCDF != null){
+                this.meal.carb = meal_in.food.nutrients.CHOCDF
+            }
+            if (meal_in.food.nutrients.PROCNT != null){
+                this.meal.pro = meal_in.food.nutrients.PROCNT
+            }
+            this.meal.eaten_cals()
+            this.modal_add_meal()
+            this.meal_search = ''
         },
 
         modal_add_meal: function() {
@@ -108,7 +128,7 @@ const app = new Vue({
 
         addMeal: async function(meal_time_in) {
             this.meal.meal_time = meal_time_in
-            console.log('wtf', this.meal)
+            console.log('addMeal:', this.meal)
             var input = 'api/meal/' + this.date + '/'
             const response = await axios.post(input, this.meal)
             // // add meal to this.meals
@@ -150,7 +170,7 @@ const app = new Vue({
 
         set_date: function() {
             if (typeof(this.date) == typeof(new Date())) {
-                console.log('BOOOOOOO', this.date)
+                // console.log('BOOOOOOO', this.date)
                 var year = this.date.getFullYear().toString()
                 var month = (this.date.getMonth() + 1).toString()
                 if (month.length != 2) {
@@ -167,7 +187,7 @@ const app = new Vue({
         getMeal: async function() {
             this.set_date()
             var input = 'api/meal/' + this.date + '/'
-            console.log(input)
+            // console.log('getMeal1:' input)
             const response = await axios.get(input)
             // console.log('resp', response)
             this.meals = response.data
@@ -182,7 +202,6 @@ const app = new Vue({
                 this.meals[i] = this.conv_meal(this.meals[i], i)
                 this.cal_tot += this.meals[i].eaten_cals()
                 // assigns meals to meal times
-                console.log('bf', this.meals[i])
                 switch (this.meals[i].meal_time) {
                     case 'breakfast':
                         this.breakfast_meals.push(this.meals[i]);
@@ -213,7 +232,7 @@ const app = new Vue({
             var temp = new Recipe()
             // this is to keep remove_meal(org_index) working, do not access in model
             temp.org_index = org_index
-            console.log('GELLO')
+            // console.log('conv_meal')
             temp.pk = meal_in.pk
             temp.title = meal_in.title
             temp.url = meal_in.url
@@ -231,7 +250,7 @@ const app = new Vue({
 
         getOwner: async function() {
             const response = await axios.get('api/user/')
-            console.log('users api call', response)
+            // console.log('users api call', response)
 
             var USER = response.data
             // this.owner = USER
@@ -275,53 +294,6 @@ const app = new Vue({
             }
             const response = await axios.post('api/user/', modUser)
             console.log(response)
-        },
-
-        // suggestion api
-        suggestion: async function() {
-            // will use _parse_recipies to find best match
-
-            // if ingredients are entered then will colate them
-            var ingredients = []
-            if (this.ingr_one) { ingredients.push(this.ingr_one)}
-            if (this.ingr_two) { ingredients.push(this.ingr_two)}
-            if (this.ingr_three) { ingredients.push(this.ingr_three)}
-            if (this.ingr_four) { ingredients.push(this.ingr_four)}
-            var ingr = '?q=' + ingredients.join()
-
-            // if search cals blank then use remaining cals
-            var cals = 0
-            if (this.search_cals !== 0){
-                cals = this.search_cals
-            } else {
-                cals = this.remaining_cal
-            }
-            var rCals = '&calories=' + cals
-            
-            // TODO add in diet restrictions
-            // Edamam API call
-            get = this.sugg_api + ingr + this.app_id + this.app_key + rCals
-            const response = await axios.get(get)
-            
-            // Filter results
-            this.recipe = this._parse_recipes(response.data.hits)
-            console.log(this.recipe)
-        },
-
-        food_search: async function() {
-            // var use_NLP = '?nutrition-type=logging&'
-            this.meal_search = this.meal_search.toLowerCase()
-            var ingr = this.meal_search.split(' ')
-            console.log('food search ingr1', ingr)
-            ingr = '?ingr=' + ingr.join('%20')
-            console.log('food search ingr2', ingr)
-            // get = this.food_api + use_NLP + ingr + this.app_id + this.app_key
-            get = this.food_api + ingr + this.food_app_id + this.food_app_key
-            console.log('food search get', get)
-            const response = await axios.get(get)
-            console.log('food search response', response)
-            this.search_results = response.data.hints
-            // this.search_results = response
         },
 
         set_add_meal_modal_data: function(meal_section) {
@@ -396,6 +368,68 @@ const app = new Vue({
             return temp
         },
 
+        // suggestion api
+        suggestion: async function() {
+            // will use _parse_recipies to find best match
+
+            // if ingredients are entered then will colate them
+            var ingredients = []
+            if (this.ingr_one) { ingredients.push(this.ingr_one)}
+            if (this.ingr_two) { ingredients.push(this.ingr_two)}
+            if (this.ingr_three) { ingredients.push(this.ingr_three)}
+            if (this.ingr_four) { ingredients.push(this.ingr_four)}
+            var ingr = '?q=' + ingredients.join()
+
+            // if search cals blank then use remaining cals
+            var cals = 0
+            if (this.search_cals !== 0){
+                cals = this.search_cals
+            } else if (this.remaining_cal > 150) {
+                cals = this.remaining_cal
+            } else {
+                cals = 450
+            }
+            var rCals = '&calories=' + cals
+            
+            // TODO add in diet restrictions
+            // Edamam API call
+            get = this.sugg_api + ingr + this.recipe_app_id + this.recipe_app_key + rCals
+            const response = await axios.get(get)
+            console.log('suggestion resp:', response)
+
+            // Filter results
+            this.recipe = this._parse_recipes(response.data.hits)
+            console.log(this.recipe)
+        },
+
+        food_search: async function() {
+            // var use_NLP = '?nutrition-type=logging&'
+            this.meal_search = this.meal_search.toLowerCase()
+            var ingr = this.meal_search.split(' ')
+            // console.log('food search ingr1', ingr)
+            ingr = '?ingr=' + ingr.join('%20')
+            // console.log('food search ingr2', ingr)
+            // get = this.food_api + use_NLP + ingr + this.app_id + this.app_key
+            get = this.food_api + ingr + this.food_app_id + this.food_app_key
+            // console.log('food search get', get)
+            const response = await axios.get(get)
+            // console.log('food search response', response)
+            this.search_results = response.data.hints
+            // this.search_results = response
+        },
+
+        search_modal_handler: function(meal_time) {
+            this.set_add_meal_modal_data(meal_time)
+            this.sugg_add_meal()
+        },
+
+        sugg_add_meal: function() {
+            this.meal = this.recipe
+            // this.suggestion()
+            this.addMeal(this.add_meal_modal_data)
+            this.add_meal_modal_data = ''
+        },
+
         _parse_recipes: function(hits) {
             // This takes in 10 recipe hits from API and searches for most relevent
             var closest = new Recipe()
@@ -403,14 +437,27 @@ const app = new Vue({
             // builds list of recipes
             for (i=0; i < hits.length; i++) {
                 var rcp = new Recipe()
+                rcp.title = hits[i].recipe.label
                 rcp.url = hits[i].recipe.url
-                rcp.image = hits[i].recipe.image
-                rcp.calories = hits[i].recipe.calories
-                rcp.cooktime = hits[i].recipe.totalNutrients.totalTime
-                rcp.servings = hits[i].recipe.yield
-                rcp.fat = hits[i].recipe.digest['Fat']
-                rcp.carb = hits[i].recipe.digest['Carbs']
-                rcp.pro = hits[i].recipe.digest['Protein']
+                rcp.calories = Math.floor(hits[i].recipe.calories / hits[i].recipe.yield)
+                rcp.tot_calories = Math.floor(hits[i].recipe.calories)
+                rcp.tot_serv = hits[i].recipe.yield
+                rcp.servings = 1
+                if (hits[i].recipe.digest['Fat'] != null) {
+                    rcp.fat = hits[i].recipe.digest['Fat']
+                }
+                if (hits[i].recipe.digest['Carbs'] != null) {
+                    rcp.carb = hits[i].recipe.digest['Carbs']
+                }
+                if (hits[i].recipe.digest['Protein'] != null) {
+                    rcp.pro = hits[i].recipe.digest['Protein']
+                }
+                if (hits[i].recipe.image != null) {
+                    rcp.image = hits[i].recipe.image
+                }
+                if (hits[i].recipe.totalNutrients.totalTime != null) {
+                    rcp.cooktime = hits[i].recipe.totalNutrients.totalTime
+                }
                 recipes.push(rcp)
             }
             // finds most ideal match based on cals

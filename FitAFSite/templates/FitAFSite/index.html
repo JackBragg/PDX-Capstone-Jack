@@ -5,9 +5,13 @@
   Meals
 {% endblock title %}
 
+{% block navbar %}
+{% endblock navbar %}
+
 {% block extra_styles %}
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<style>html{visibility: hidden;opacity:0;}</style>
 <link rel="stylesheet" href="{% static 'FitAFSite/css/index.css' %}">
 {% endblock extra_styles %}
 
@@ -15,12 +19,37 @@
 <p><a href="{% url 'logout' %}">logout</a></p>
 
 <div id='app' style='width:100%;'>
+<!-- navbar -->
+  <nav class='my-nav'>
+    <div class="nav-wrapper">
+      {% if user.is_authenticated %}
+      <ul class='left hide-on-med-and-down row'>
+        <li>
+          <a href="#user_modal" class='modal-trigger'> ${ owner.username } </a>
+        </li>
+        <li>
+          <a class="waves-effect waves-light modal-trigger" href="#user_modal">User Data</a>
+        </li>
+        <li>
+          <a class="waves-effect waves-light modal-trigger" href="#search_modal">Search Me!</a>
+        </li>
+      </ul>
+      {% endif %}
+      <a href="{% url 'home' %}" class="brand-logo center">Logo</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="sass.html">Sass</a></li>
+        <li><a href="badges.html">Components</a></li>
+        <li class="active"><a href="collapsible.html">JavaScript</a></li>
+      </ul>
+    </div>
+  </nav>
 
+  <!-- date picker -->
   <div class='container'>
     Date: <input type="date" name="bday" v-model='date' v-on:change="getMeal">
   </div>
       
-
+  <!-- meal logs -->
   <div class="meal-log">
     <div class="row">
       <div class="col-md-8">
@@ -28,7 +57,7 @@
 
           <ul>
             <!-- breakfast -->
-            <li style="border-bottom: 1px solid black; background-color: rgb(43, 226, 195)">
+            <li class="meal-lable-log">
               <span>Breakfast</span>
               <i
                 v-on:click="set_add_meal_modal_data('breakfast')" 
@@ -55,7 +84,7 @@
             </li>
 
             <!-- snack1 -->
-            <li style="border-bottom: 1px solid black; background-color: rgb(43, 226, 195)">
+            <li class="meal-lable-log">
               <span>Snack</span>
               <i
                 v-on:click="set_add_meal_modal_data('snack1')" 
@@ -82,7 +111,7 @@
             </li>
           
             <!-- lunch -->
-            <li style="border-bottom: 1px solid black; background-color: rgb(43, 226, 195)">
+            <li class="meal-lable-log">
               <span>Lunch</span>
               <i
                 v-on:click="set_add_meal_modal_data('lunch')" 
@@ -109,7 +138,7 @@
             </li>
           
             <!-- snack2 -->
-            <li style="border-bottom: 1px solid black; background-color: rgb(43, 226, 195)">
+            <li class="meal-lable-log">
               <span>Snack</span>
               <i
                 v-on:click="set_add_meal_modal_data('snack2')" 
@@ -136,7 +165,7 @@
             </li>
           
             <!-- dinner -->
-            <li style="border-bottom: 1px solid black; background-color: rgb(43, 226, 195)">
+            <li class="meal-lable-log">
               <span>Dinner</span>
               <i
                 v-on:click="set_add_meal_modal_data('dinner')" 
@@ -163,7 +192,7 @@
             </li>
           
             <!-- night_snack -->
-            <li style="border-bottom: 1px solid black; background-color: rgb(43, 226, 195)">
+            <li class="meal-lable-log late-night-snack">
               <span>Late Night Snack</span>
               <i
                 v-on:click="set_add_meal_modal_data('night_snack')" 
@@ -200,9 +229,6 @@
       </div>
     </div>
   </div>
-  
-  <a class="waves-effect waves-light btn modal-trigger" href="#user_modal">User Data</a>
-  <a class="waves-effect waves-light btn modal-trigger" href="#search_modal">Search Me!</a>
   
   <!-- Add Meal Modal -->
   <div id="add_meal_modal" class="modal">

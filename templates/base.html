@@ -18,14 +18,10 @@
         </script>         -->
     </head>
     <body>
-        <p> Well Hello there! </p>
-        {% if user.is_authenticated %}
-        <p> General {{ user.username }}! </p>
-        {% else %}
-        <p> General Kenobi! </p>
-        {% endif %}
-        {% block navbar %}
-        {% endblock navbar %}
+      
+      {% block navbar %}
+
+      {% endblock navbar %}
 
         {% block content %}
         <p>well hello there.</p>

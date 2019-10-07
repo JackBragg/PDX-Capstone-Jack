@@ -1,39 +1,68 @@
 {% load static %}
 <html>
-    <head>
-        <title>Fit AF MFer</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>
-            {% block title %}
-                Fit AF
-            {% endblock title %}
-        </title>
-    
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
-        {% block extra_styles %}
-        {% endblock extra_styles %}
-        <!-- <script>
-            const USER = {user: '{{ user }}'}
-        </script>         -->
-    </head>
-    <body>
-      
-      {% block navbar %}
-
-      {% endblock navbar %}
-
-        {% block content %}
-        <p>well hello there.</p>
-        <p>GENERAL KENOBI!</p>
-        {% endblock content %}
-
-        {% block main_scripts %}
-        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-        {% endblock main_scripts %}
-        
-        {% block extra_scripts %}
-        {% endblock extra_scripts %}
-    </body>
+<head>
+  <title>Fit AF MFer</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>
+    {% block title %}
+    Fit AF
+    {% endblock title %}
+  </title>
+  
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+  {% block extra_styles %}
+  {% endblock extra_styles %}
+  <!-- <script>
+    const USER = {user: '{{ user }}'}
+  </script>         -->
+</head>
+<body>
+  
+  {% block navbar %}
+  <!-- navbar -->
+  <nav class='my-nav'>
+    <div class="nav-wrapper">
+      <ul class='left hide-on-med-and-down row'>
+        {% if user.is_authenticated %}
+        <li>
+          <a href="#user_modal" class="waves-effect waves-light modal-trigger" > {{ user }} </a>
+        </li>
+        <li>
+          <a class="waves-effect waves-light modal-trigger" href="#user_modal">User Data</a>
+        </li>
+        {% else %}
+        <li>
+          <a href="{% url 'login' %}">login</a>
+        </li>
+        <li>
+          <a href="{% url 'signup' %}">sign up</a>
+        </li>
+        {% endif %}
+      </ul>
+      <a href="{% url 'home' %}" class="brand-logo center">Logo</a>
+      {% if user.is_authenticated %}
+      <ul class="right hide-on-med-and-down">
+        <li><a class="waves-effect waves-light modal-trigger" href="#search_modal">Search Me!</a></li>
+        <li><a class="waves-effect waves-light" href="{% url 'logout' %}">logout</a></li>
+      </ul>
+      {% else %}
+      {% endif %}
+    </div>
+  </nav>
+  {% endblock navbar %}
+  
+  {% block content %}
+  <p>well hello there.</p>
+  <p>GENERAL KENOBI!</p>
+  {% endblock content %}
+  
+  {% block main_scripts %}
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  {% endblock main_scripts %}
+  
+  {% block extra_scripts %}
+  {% endblock extra_scripts %}
+</body>
 </html>

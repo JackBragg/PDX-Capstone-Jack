@@ -7,6 +7,12 @@ from .forms import CustomUserCreationForm
 
 # Create new users.
 
+def home(request) :
+    if request.user.is_authenticated:
+        return redirect('site:index')
+    return render(request, 'home.html')
+
+
 def User(request) :
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -18,7 +24,7 @@ def User(request) :
             password = form.clean_password2()
             user = authenticate(username=username, password=password)
             login(request, user)
-            return redirect('home')
+            return redirect('site:index')
     else:
         print('FORM IS NOT VVVAALID')
         form = CustomUserCreationForm()

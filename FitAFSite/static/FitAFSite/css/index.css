@@ -3,6 +3,23 @@ html {
   font: Roboto;
 }
 
+.top-box {
+  display: flex;
+  justify-content: center;
+}
+
+.user-box {
+  border: 7px solid rgb(7, 113, 128);
+  margin-top: 100px;
+  padding: 20px;
+  padding-top:0px;
+  border-radius: 15px;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .meal-list {
   max-height: 400px;
   min-width: 100px;
@@ -18,7 +35,7 @@ nav {
 }
 
 .meal-lable-log {
-  border-bottom: 1px solid black;
+  border-bottom: 2px solid black;
   background-color: rgb(115, 216, 174);
   height: 40px;
   font: Roboto;
@@ -26,6 +43,32 @@ nav {
   font-size: 24px;
   padding: 0;
   margin: 0;
+}
+
+.meal-item-log {
+  border-bottom: 1px solid black;
+  background-color: rgba(92, 219, 145, 0.459);
+  height: 30px;
+  font: Roboto;
+  color: grey;
+  font-size: 18px;
+  padding: 0;
+  margin: 0;
+}
+
+.meal-search-results-modal {
+  border-bottom: 1px solid black;
+  background-color: grey;
+}
+
+.results-img-container {
+  height: 50px;
+  width: 50px;
+}
+
+.results-img {
+  height: 100%;
+  width: 100%;
 }
 
 .late-night-snack {

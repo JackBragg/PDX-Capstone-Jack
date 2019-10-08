@@ -75,7 +75,7 @@ const app = new Vue({
         modal_servings: 1,
         modal_data: [],
         add_meal_modal_data: '',
-        date: "",
+        date: new Date(),
         food_api: 'https://api.edamam.com/api/food-database/parser',
         sugg_api: 'https://api.edamam.com/search',
         recipe_app_id : '&app_id=',
@@ -444,6 +444,8 @@ const app = new Vue({
                 }
                 if (hits[i].recipe.image != null) {
                     rcp.image = hits[i].recipe.image
+                } else {
+                    rcp.image = 'https://www.edamam.com/food-img/963/9633e24decdc42ed674fdc787623b492.png'
                 }
                 if (hits[i].recipe.totalNutrients.totalTime != null) {
                     rcp.cooktime = hits[i].recipe.totalNutrients.totalTime
@@ -465,6 +467,10 @@ const app = new Vue({
             }
             return closest
 
+        },
+
+        clear_search: function() {
+            this.recipe = new Recipe()
         },
 
         // grabs api keys

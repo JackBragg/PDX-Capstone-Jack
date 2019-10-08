@@ -9,13 +9,16 @@
     Fit AF
     {% endblock title %}
   </title>
-  
+  {% block main_styles %}
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <style>html{visibility: hidden;opacity:0;}</style>
+  <link rel="stylesheet" href="{% static 'FitAFSite/css/index.css' %}">
+  {% endblock %}
+
   {% block extra_styles %}
   {% endblock extra_styles %}
-  <!-- <script>
-    const USER = {user: '{{ user }}'}
-  </script>         -->
+
 </head>
 <body>
   
@@ -23,13 +26,13 @@
   <!-- navbar -->
   <nav class='my-nav'>
     <div class="nav-wrapper">
-      <ul class='left hide-on-med-and-down row'>
+      <ul class='left hide-on-med-and-down'>
         {% if user.is_authenticated %}
         <li>
           <a href="#user_modal" class="waves-effect waves-light modal-trigger" > {{ user }} </a>
         </li>
         <li>
-          <a class="waves-effect waves-light modal-trigger" href="#user_modal">User Data</a>
+          <a class="waves-effect waves-light modal-trigger fas fa-cog" href="#user_modal"></a>
         </li>
         {% else %}
         <li>
@@ -40,16 +43,24 @@
         </li>
         {% endif %}
       </ul>
-      <a href="{% url 'home' %}" class="brand-logo center">Logo</a>
+      <a href="{% static 'index' %}" class="brand-logo center">Logo</a>
       {% if user.is_authenticated %}
+      <a href="#" data-target="user-clps" class="sidenav-trigger"><i class="material-icons">user</i></a>
       <ul class="right hide-on-med-and-down">
-        <li><a class="waves-effect waves-light modal-trigger" href="#search_modal">Search Me!</a></li>
+        <li><a class="waves-effect waves-light modal-trigger" href="#search_modal">Search</a></li>
         <li><a class="waves-effect waves-light" href="{% url 'logout' %}">logout</a></li>
       </ul>
       {% else %}
       {% endif %}
     </div>
   </nav>
+  
+  <ul class="sidenav" id='user-clps'>
+    <li><a href="#user_modal" class="waves-effect waves-light modal-trigger" > {{ user }} </a></li>
+    <li><a class="waves-effect waves-light modal-trigger" href="#search_modal">Recipe search</a></li>
+    <li><a class="waves-effect waves-light" href="{% url 'logout' %}">logout</a></li>
+  </ul>
+
   {% endblock navbar %}
   
   {% block content %}
@@ -60,6 +71,8 @@
   {% block main_scripts %}
   <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="{% static 'FitAFSite/js/index.js' %}"></script>
   {% endblock main_scripts %}
   
   {% block extra_scripts %}

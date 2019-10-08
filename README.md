@@ -1,5 +1,4 @@
 # PDX-Capstone-Jack
-FitAF - nutritional macro app connecting nutritionists and customers
+FitAF - nutritional macro app
 
-Customer will log food and activity for the day and the nutritionist has access to view and comment on users posts,
-then propose changes to users goals and plan which the user will approve or disprove.
+Customer will log food for the day and the app will suggest recipies based on remaining calories for the day.

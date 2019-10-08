@@ -310,15 +310,15 @@
           </div>
           <div class="col s12 m5 l5 thin-brdr">
             <div class="search-cooktime input-field col s12">
-              <input v-model="recipe.cooktime" type="number" id="cooktime">
+              <input v-model="search_cooktime" type="number" id="cooktime">
               <label for="cooktime">Cook Time:</label>
             </div>
             <div class="search-cal input-field col s12">
               <label for="search-cals">Calories:</label>
-              <input v-model="recipe.calories" type="number" id="search-cals">
+              <input v-model="search_cals" type="number" id="search-cals">
             </div>
           </div>
-          <div id='suggestionBox' class="col s12 m7 l7">    
+          <div id='suggestionBox' class="col s12 m6 l6">    
             <a v-bind:href="recipe.url">
               <div class=''>
                 <img v-bind:src='recipe.image' alt=""> 

@@ -52,30 +52,31 @@ const app = new Vue({
     el: '#app',
     delimiters: ['${', '}'], // set custom delimiters here instead of {{}}    
     data: {
-        owner: new User,
-        recipe: new Recipe(),
-        cal_tot: 0,
-        meals: [],
-        meal: new Recipe(),
+        add_meal_modal_data: '',
         breakfast_meals: [],
-        snack1_meals: [],
-        lunch_meals: [],
-        snack2_meals: [],
+        cal_tot: 0,
+        date: new Date(),
         dinner_meals: [],
-        night_snack_meals: [],
         goal: 2000,
-        remaining_cal: 0,
         ingr_one: '',
         ingr_two: '',
         ingr_three: '',
         ingr_four: '',
-        search_cals: 0,
+        lunch_meals: [],
+        meal: new Recipe(),
         meal_search: '',
-        search_results: [],
-        modal_servings: 1,
+        meals: [],
         modal_data: [],
-        add_meal_modal_data: '',
-        date: new Date(),
+        modal_servings: 1,
+        night_snack_meals: [],
+        owner: new User,
+        recipe: new Recipe(),
+        remaining_cal: 0,
+        snack1_meals: [],
+        snack2_meals: [],
+        search_cals: null,
+        search_cooktime: null,
+        search_results: [],
         food_api: 'https://api.edamam.com/api/food-database/parser',
         sugg_api: 'https://api.edamam.com/search',
         recipe_app_id : '&app_id=',
@@ -372,7 +373,7 @@ const app = new Vue({
 
             // if search cals blank then use remaining cals
             var cals = 0
-            if (this.search_cals !== 0){
+            if (this.search_cals > 99){
                 cals = this.search_cals
             } else if (this.remaining_cal > 150) {
                 cals = this.remaining_cal
@@ -384,6 +385,7 @@ const app = new Vue({
             // TODO add in diet restrictions
             // Edamam API call
             get = this.sugg_api + ingr + this.recipe_app_id + this.recipe_app_key + rCals
+            console.log('sugg req:', get)
             const response = await axios.get(get)
             console.log('suggestion resp:', response)
 

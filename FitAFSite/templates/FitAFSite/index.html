@@ -250,11 +250,11 @@
           class='meal-search-results-modal row'
         >
           <a @click='create_add_food(meal)' class='modal-close results-img'>
-            <div class='results-img-container'>
+            <div class='results-img-cont col'>
               <img class='results-img' v-bind:src=meal.food.image alt="">
             </div>
-            <span class="left-brdr"> ${ meal.food.label } </span>
-            <span class="left-brdr">Calories: ${ meal.food.nutrients.ENERC_KCAL }</span>   
+            <span class="left-brdr col"> ${ meal.food.label } </span>
+            <span class="left-brdr col">Calories: ${ meal.food.nutrients.ENERC_KCAL }</span>   
           </a>
         </li>
       </ul>
@@ -285,33 +285,47 @@
   </div>
 
   <!-- Search Modal -->
-  <div id="search_modal" class="modal" style="height: 400px; width: 1000px;">
+  <div id="search_modal" class="modal">
       <div class="modal-content">
-        <div class="search-box">
+        <div class="search-box row">
           <div class="search-ingrs">
-            <label for="ingr_one">Ingredient One</label>
-            <input v-model="ingr_one" type="text" id="ingr_one">
-            <label for="ingr_two">Ingredient Two</label>
-            <input v-model="ingr_two" type="text" id="ingr_two">
-            <label for="ingr_three">Ingredient Three</label>
-            <input v-model="ingr_three" type="text" id="ingr_three">
-            <label for="ingr_four">Ingredient Four</label>
-            <input v-model="ingr_four" type="text" id="ingr_four">
+            <div class="col s12 m5 l5 thin-brdr">
+              <div class="input-field col s12">
+                <input v-model="ingr_one" type="text" id="ingr_one">
+                <label for="ingr_one">Ingredient One</label>
+              </div>
+              <div class="input-field col s12">
+                <input v-model="ingr_two" type="text" id="ingr_two">
+                <label for="ingr_two">Ingredient Two</label>
+              </div>
+              <div class="input-field col s12">
+                <input v-model="ingr_three" type="text" id="ingr_three">
+                <label for="ingr_three">Ingredient Three</label>
+              </div>
+              <div class="input-field col s12">
+                <input v-model="ingr_four" type="text" id="ingr_four">
+                <label for="ingr_four">Ingredient Four</label>
+              </div>
+            </div>
           </div>
-          <div class="search-cooktime">
-            <label for="cooktime">Cook Time:</label>
-            <input v-model="recipe.cooktime" type="number" id="cooktime">
+          <div class="col s12 m5 l5 thin-brdr">
+            <div class="search-cooktime input-field col s12">
+              <input v-model="recipe.cooktime" type="number" id="cooktime">
+              <label for="cooktime">Cook Time:</label>
+            </div>
+            <div class="search-cal input-field col s12">
+              <label for="search-cals">Calories:</label>
+              <input v-model="recipe.calories" type="number" id="search-cals">
+            </div>
           </div>
-          <div class="search-cal">
-            <label for="search-cals">Calories:</label>
-            <input v-model="recipe.cooktime" type="number" id="search-cals">
-          </div>
-          <div id='suggestionBox' style="background-size: contain; max-height: 100px; max-width: 100px;">    
+          <div id='suggestionBox' class="col s12 m7 l7">    
             <a v-bind:href="recipe.url">
-              <img v-bind:src='recipe.image' alt=""> 
+              <div class=''>
+                <img v-bind:src='recipe.image' alt=""> 
+              </div>
             </a> 
           </div>
-          <div id='sugg-info-card'>
+          <div class="col s12 m6 l6 thin-brdr" id='sugg-info-card'>
             <p> ${recipe.title} </p>
             <p>Calories: ${ recipe.tot_calories } </p>
             <p>Servings made: ${ recipe.tot_serv } </p>
@@ -347,27 +361,36 @@
   <div id="user_modal" class="modal">
     <div class="modal-content">
         <h1> ${ owner.username } </h1>
-        <div class='Biometrics col' style="border: 10px solid blue">
-          <label for="weight">weight</label>
-          <input 
+        <div class='Biometrics col' >
+          <div class="input-field col s6">
+            <input 
             type="number"
             id="weight"
             v-model = 'owner.weight'
-          >
-          <label for="height">height</label>
-          <input 
+            >
+            <label for="weight">weight</label>
+          </div>
+          <div class="input-field col s6">
+            <input 
             type="number"
             id="height"
             v-model='owner.height'
-          >
-          <label for="age">age</label>
-          <input 
+            >
+            <label for="height">height</label>
+          </div>
+          <div class="input-field col s6">
+            <input 
             type="number"
             id="age"
             v-model = 'owner.age'
-          >
-  
-          <a class='dropdown-trigger btn' href='#' data-target='dropdown1'>activity level</a>
+            >
+            <label for="age">age</label>
+          </div>
+          
+          <div style='display: flex; justify-content: space-around'>
+            <a class='dropdown-trigger btn' href='#' data-target='dropdown1'>activity level</a>
+            <a class='dropdown-trigger btn' href='#' data-target='dropdown2'>Gender</a>
+          </div>
   
           <!-- Dropdown Structure -->
           <ul id='dropdown1' class='dropdown-content'>
@@ -378,7 +401,6 @@
             <li><a v-on:click="owner.activity = 1.9" href="#!">extra active</a></li>
           </ul>
   
-          <a class='dropdown-trigger btn' href='#' data-target='dropdown2'>Gender</a>
   
           <!-- Dropdown Structure -->
           <ul id='dropdown2' class='dropdown-content'>
@@ -387,7 +409,11 @@
           </ul>
   
         </div>
-        <label for="goals">goals</label>
+        <div>
+          <p></p>
+        </div>
+
+        <!-- <label for="goals"> <h2>Goals</h2> </label>
         <div id="goals" class="col" style="border: 10px solid green">
           <label for="carb">carbohydrates</label>
           <input 
@@ -407,14 +433,17 @@
             id="fat"
             v-model="owner.fat_goal"
           >
-        </div>
-        <label for="calories">calories</label>
+        </div> -->
+        <h4>Calories</h4>
         <div class="calories">
-          <input 
+          <div class="input-field col s6">
+            <input 
             type="number"
             id="calories"
             v-model = "owner.daily_calorie"
-          >
+            >
+            <label for="calories">leave blank to compute</label>
+          </div>
         </div>
     </div>
     <div class="modal-footer">

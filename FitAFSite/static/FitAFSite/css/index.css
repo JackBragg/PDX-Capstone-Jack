@@ -7,6 +7,22 @@ ul li {
   overflow: auto;
 }
 
+#page-container {
+  position: relative;
+  min-height: 100vh;
+}
+
+#content-wrap {
+  padding-bottom: 2.5rem;    /* Footer height */
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2.5rem;            /* Footer height */
+}
+
 .top-box {
   display: flex;
   justify-content: center;
@@ -24,15 +40,6 @@ ul li {
   align-items: center;
 }
 
-.meal-list {
-  max-height: 400px;
-  min-width: 100px;
-  color: blue;
-  border: 10px solid red;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
 
 nav {
   background-color: rgb(60, 231, 202) !important;
@@ -72,13 +79,16 @@ nav {
 }
 
 .meal-search-results-modal {
-  border-bottom: 1px solid black;
-  background-color: grey;
+  border: 1px solid black;
+  background-color: rgba(9, 255, 0, 0.274);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .results-img-cont {
-  height: 50px;
-  width: 50px;
+  height: 80px;
+  width: 100px;
 }
 
 .results-img {
@@ -111,12 +121,13 @@ nav {
 .meal-log {
   height: 500px; 
   min-width: 100%;
+  overflow: auto;
 }
 
 #suggestionBox {
-  max-height: 300px;
-  max-width: 300px;
-  border: 10px solid red;
+  /* max-height: 300px;
+  max-width: 300px; */
+  border: 5px solid black;
 }
 
 html {

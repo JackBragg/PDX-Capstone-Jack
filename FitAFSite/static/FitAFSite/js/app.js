@@ -94,7 +94,7 @@ const app = new Vue({
             if (meal_in.food.image != null) {
                 this.meal.image = meal_in.food.image
             } else {
-                this.meal.image = 'XO'
+                this.meal.image = '{% static "FitAFSite/img/default_meal.jpg" %}'
             }
             this.meal.calories = Math.floor(meal_in.food.nutrients.ENERC_KCAL)
             this.meal.servings = 1
@@ -447,7 +447,7 @@ const app = new Vue({
                 if (hits[i].recipe.image != null) {
                     rcp.image = hits[i].recipe.image
                 } else {
-                    rcp.image = 'https://www.edamam.com/food-img/963/9633e24decdc42ed674fdc787623b492.png'
+                    rcp.image = '{% static "FitAFSite/img/default_meal.jpg" %}'
                 }
                 if (hits[i].recipe.totalNutrients.totalTime != null) {
                     rcp.cooktime = hits[i].recipe.totalNutrients.totalTime

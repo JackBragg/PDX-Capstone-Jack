@@ -15,7 +15,7 @@
   <style>html{visibility: hidden;opacity:0;}</style>
   <link rel="stylesheet" href="{% static 'FitAFSite/css/index.css' %}">
   {% endblock %}
-
+  <script src="https://developer.edamam.com/attribution/badge.js"></script>
   {% block extra_styles %}
   {% endblock extra_styles %}
 
@@ -43,7 +43,7 @@
         </li>
         {% endif %}
       </ul>
-      <a href="{% static 'index' %}" class="brand-logo center">Logo</a>
+      <a href="{% url 'site:index' %}" class="brand-logo center">Fit AF</a>
       {% if user.is_authenticated %}
       <a href="#" data-target="user-clps" class="sidenav-trigger"><i class="material-icons">user</i></a>
       <ul class="right hide-on-med-and-down">
@@ -62,11 +62,17 @@
   </ul>
 
   {% endblock navbar %}
-  
-  {% block content %}
-  <p>well hello there.</p>
-  <p>GENERAL KENOBI!</p>
-  {% endblock content %}
+  <div id="page-container">
+    <div id="content-wrap">
+      {% block content %}
+      <p>well hello there.</p>
+      <p>GENERAL KENOBI!</p>
+      {% endblock content %}
+      <footer id="footer">
+        <div id="edamam-badge" data-color="white"></div>
+      </footer>
+    </div>
+  </div>
   
   {% block main_scripts %}
   <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>

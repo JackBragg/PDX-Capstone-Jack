@@ -36,24 +36,30 @@
                 <i class='fas fa-plus'></i>
             </li>
             </a>
-            <li
-              v-for="mealz, i in breakfast_meals"
-              v-bind:key="i"
-              class='meal-item-log'
+            <li 
+            v-for="mealz, i in breakfast_meals"
+            v-bind:key="i"
+            class='meal-item-log row'
             >
-              <span> ${ mealz.title } </span>
-              <span class="left-brdr">Calories: ${ mealz.eaten_cals() }</span>
-              <span class="left-brdr">
-                <a v-on:click="serv_modal_func('breakfast', i)" class="modal-trigger" href="#servings_modal">
-                  Servings: ${ mealz.servings }
-                </a>
-              </span>
-              <span class='control-buttons left-brdr'>
-                <i 
-                v-on:click='parse_removal_index("breakfast", i)'
-                class='fas fa-times'
-                ></i>
-              </span>    
+              <a
+                @:click="serv_modal_func('breakfast', i)"
+                class="modal-trigger"
+                href="#meal_list_item_modal"
+                >
+                <p class="col s6 m6 l6"> ${ mealz.title } </p>
+                <p class="left-brdr meal-list-item-cols col s3 m3 l3">Calories: ${ mealz.eaten_cals() }</p>
+                <p class="left-brdr meal-list-item-cols col s3 m3 l3">
+                  <a v-on:click="serv_modal_func('breakfast', i)" class="modal-trigger" href="#servings_modal">
+                    Servings: ${ mealz.servings }
+                  </a>
+                </p>
+                <p class='control-buttons left-brdr sml-btn col'>
+                  <i 
+                  v-on:click='parse_removal_index("breakfast", i)'
+                  class='fas fa-times'
+                  ></i>
+                </p>    
+              </a>  
             </li>
 
             <!-- snack1 -->
@@ -446,6 +452,18 @@
     </div>
   </div> <!-- end User Modal -->
   
+  <!-- meal_list_item_modal -->
+  <div id="meal_list_item_modal" class="modal"> 
+    <div class="modal-content">
+      <p>${modal_data.title}</p>
+      <p>${modal_data.url}</p>
+    </div>
+    <div class="modal-footer">
+      <a v-on:click=''  href="#!" class="modal-close waves-effect waves-green btn-flat">Done</a>
+    </div>
+
+  </div>
+
 </div> <!-- end app -->
 {% endblock content %}
 

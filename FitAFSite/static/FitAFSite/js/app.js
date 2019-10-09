@@ -299,6 +299,7 @@ const app = new Vue({
                 case 'breakfast':
                     this.modal_data.push(this.breakfast_meals[serv_index].org_index);
                     this.modal_data.push('breakfast');
+                    this.modal_servings = this.modal_data[0].servings
                     break;
                 case 'snack1':
                     this.modal_data.push(this.snack1_meals[serv_index].org_index);
@@ -326,11 +327,11 @@ const app = new Vue({
 
         set_clear_serv_modal_data: async function() {
             console.log('set_clear_serv...', this.modal_data[0])
+            // cal_tot needs to be changed before it is converted to a new obj
             this.cal_tot -= this.meals[this.modal_data[0]].eaten_cals()
             this.meal = this.chng_meal_serv_size(this.meals[this.modal_data[0]])
             this.meal.servings = this.modal_servings
             
-            // cal_tot needs to be changed before it is converted to a new obj
             // delete old entry
             const response = await axios.delete(`api/meald/${this.meal.pk}/`)
             console.log(response)
@@ -494,11 +495,8 @@ const app = new Vue({
         this.cal_tot = 0
         this.getMeal()
         this.set_date()
-        // Only uncomment this when finished! otherwise it will exceed api limit!!!!!!!!!!
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // this.suggestion()
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     },
+
     updated: function() {
         window.localStorage.date = this.date
     }

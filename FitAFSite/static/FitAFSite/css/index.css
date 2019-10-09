@@ -70,6 +70,10 @@ nav {
   text-align: left;
 }
 
+p {
+  margin: 0;
+}
+
 .meal-item-log {
   border-bottom: 1px solid black;
   background-color: rgba(8, 255, 255, 0.082);
@@ -130,6 +134,14 @@ nav {
   border-left: 3px solid rgb(60, 231, 202);
   border-right: 3px solid rgb(60, 231, 202);
   overflow: auto;
+}
+
+.meal-list-item-cols {
+  width: 100px;
+}
+
+.sml-btn {
+  width: 25px;
 }
 
 html {

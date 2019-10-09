@@ -62,6 +62,7 @@ const app = new Vue({
         ingr_two: '',
         ingr_three: '',
         ingr_four: '',
+        loading: false,
         lunch_meals: [],
         meal: new Recipe(),
         meal_search: '',
@@ -396,6 +397,7 @@ const app = new Vue({
 
         food_search: async function() {
             // var use_NLP = '?nutrition-type=logging&'
+            this.loading = true
             this.meal_search = this.meal_search.toLowerCase()
             var ingr = this.meal_search.split(' ')
             // console.log('food search ingr1', ingr)
@@ -407,6 +409,7 @@ const app = new Vue({
             const response = await axios.get(get)
             // console.log('food search response', response)
             this.search_results = response.data.hints
+            this.loading = false
             // this.search_results = response
         },
 

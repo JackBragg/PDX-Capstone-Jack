@@ -15,11 +15,11 @@
 
   <!-- date picker -->
   <div class='container'>
-    Date: <input type="date" name="bday" v-model='date' v-on:change="getMeal">
+    Pick a Date: <input type="date" name="bday" v-model='date' v-on:change="getMeal">
   </div>
       
   <!-- meal logs -->
-  <div class="meal-log">
+  <div class="meal-log container">
     <div class="row">
       <div class="col-md-8">
         <div>
@@ -291,52 +291,66 @@
       <div class="modal-content">
         <div class="search-box row">
           <div class="search-ingrs row">
-            <div class="col s12 m5 l5 thin-brdr">
-              <div class="input-field col s12">
-                <input v-model="ingr_one" type="text" id="ingr_one">
-                <label for="ingr_one">Ingredient One</label>
-              </div>
-              <div class="input-field col s12">
-                <input v-model="ingr_two" type="text" id="ingr_two">
-                <label for="ingr_two">Ingredient Two</label>
-              </div>
-              <div class="input-field col s12">
-                <input v-model="ingr_three" type="text" id="ingr_three">
-                <label for="ingr_three">Ingredient Three</label>
-              </div>
-            </div>
-            <div class="col s12 m5 l5 thin-brdr">
-              <!-- <div class="search-cooktime input-field col s12">
-                <input v-model="search_cooktime" type="number" id="cooktime">
-                <label for="cooktime">Cook Time: minutes</label>
-              </div> -->
-              <div class="input-field col s12">
-                <input v-model="ingr_four" type="text" id="ingr_four">
-                <label for="ingr_four">Ingredient Four</label>
-              </div>
-              <div class="search-cal input-field col s12">
-                <label for="search-cals">Calories:</label>
-                <input v-model="search_cals" type="number" id="search-cals">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div id='suggestionBox' class="col s12 m5 l5 thin-brdr">    
-              <a v-bind:href="recipe.url">
-                <div class=''>
-                  <img v-bind:src='recipe.image' alt=""> 
+
+            <div class="col s12 m6 l6 ser_mod_mat_box">
+              <div class='thin-brdr'>
+                <div class="input-field col s12">
+                  <input v-model="ingr_one" type="text" id="ingr_one">
+                  <label for="ingr_one">Ingredient One</label>
                 </div>
-              </a> 
+                <div class="input-field col s12">
+                  <input v-model="ingr_two" type="text" id="ingr_two">
+                  <label for="ingr_two">Ingredient Two</label>
+                </div>
+                <div class="input-field col s12">
+                  <input v-model="ingr_three" type="text" id="ingr_three">
+                  <label for="ingr_three">Ingredient Three</label>
+                </div>
+              </div>
             </div>
-            <div class="col s12 m5 l5 thin-brdr" id='sugg-info-card'>
-              <p> ${recipe.title} </p>
-              <p>Calories: ${ recipe.tot_calories } </p>
-              <p>Servings made: ${ recipe.tot_serv } </p>
-              <p>Fat: ${ recipe.fat } </p>
-              <p>Carb: ${ recipe.carb } </p>
-              <p>Protein: ${ recipe.pro } </p>  
+
+            <div class="col s12 m6 l6 ser_mod_mat_box">
+              <div class="thin-brdr">
+              
+                <!-- <div class="search-cooktime input-field col s12">
+                  <input v-model="search_cooktime" type="number" id="cooktime">
+                  <label for="cooktime">Cook Time: minutes</label>
+                </div> -->
+                <div class="input-field col s12">
+                  <input v-model="ingr_four" type="text" id="ingr_four">
+                  <label for="ingr_four">Ingredient Four</label>
+                </div>
+                <div class="search-cal input-field col s12">
+                  <label for="search-cals">Calories: blank for auto</label>
+                  <input v-model="search_cals" type="number" id="search-cals">
+                </div>
+              </div>
             </div>
+
           </div>
+          
+          <div class="row">
+
+            <div class="col s12 m6 l6 ser_mod_mat_box">
+              <div id='suggestionBox'>    
+                <img class="responsive-img" v-bind:src='recipe.image' alt=""> 
+              </div>
+              <p><a v-bind:href="recipe.url"> goto recipe </a></p>
+            </div>
+
+            <div class="col s12 m6 l6 ser_mod_mat_box">
+              <div class="thin-brdr" id='sugg-info-card'>
+                <p> ${recipe.title} </p>
+                <p>Calories: ${ recipe.tot_calories } </p>
+                <p>Servings made: ${ recipe.tot_serv } </p>
+                <p>Fat: ${ recipe.fat } </p>
+                <p>Carb: ${ recipe.carb } </p>
+                <p>Protein: ${ recipe.pro } </p>  
+              </div>
+            </div>
+
+          </div>
+
         </div>
       </div>
       <div class="modal-footer">

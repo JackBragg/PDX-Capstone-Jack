@@ -74,17 +74,6 @@ p {
   margin: 0;
 }
 
-.meal-item-log {
-  border-bottom: 1px solid black;
-  background-color: rgba(8, 255, 255, 0.082);
-  height: 30px;
-  font: Roboto;
-  color: grey;
-  font-size: 18px;
-  padding: 0;
-  margin: 0;
-}
-
 .meal-search-results-modal {
   border: 1px solid black;
   background-color: rgba(9, 255, 0, 0.274);
@@ -136,12 +125,35 @@ p {
   overflow: auto;
 }
 
+.meal-item-log {
+  border-bottom: 1px solid black;
+  background-color: rgba(8, 255, 255, 0.082);
+  height: 30px;
+  font: Roboto;
+  color: grey;
+  font-size: 18px;
+  padding: 0;
+  margin: 0;
+}
+
 .meal-list-item-cols {
-  width: 100px;
+  width: 150px;
+  text-align: right;
 }
 
 .sml-btn {
   width: 25px;
+}
+
+.the-separator {
+  width: 100%;
+  display: flex;
+  justify-content: right;
+}
+
+.tot-cal-cont {
+  display: flex;
+  justify-content: center;
 }
 
 html {

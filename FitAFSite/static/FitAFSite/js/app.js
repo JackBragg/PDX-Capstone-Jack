@@ -68,6 +68,7 @@ const app = new Vue({
         meal_search: '',
         meals: [],
         modal_data: [],
+        modal_recipe: new Recipe(),
         modal_servings: 1,
         night_snack_meals: [],
         owner: new User,
@@ -127,6 +128,10 @@ const app = new Vue({
             // this.meals.push({text: this.meal, completed: false})
             this.meal = new Recipe()
             this.getMeal()
+        },
+
+        modal_parse_removal_index: function() {
+            this.removeMeal(this.modal_data[0])
         },
 
         parse_removal_index: function(meal_section, index) {
@@ -292,6 +297,18 @@ const app = new Vue({
             this.add_meal_modal_data = meal_section
         },
 
+        parse_modal_func: function(meal_section, serv_index) {
+            this.serv_modal_func(meal_section, serv_index)
+            this.modal_recipe = this.meals[this.modal_data[0]]
+            console.log('RECIPE', this.meals[this.modal_data[0]])
+        },
+
+        update_meal_item: function() {
+            console.log('update meal item')
+            this.set_clear_serv_modal_data()
+            this.modal_recipe = new Recipe()
+        },
+
         // serving size
         serv_modal_func: function(meal_section, serv_index) {
             console.log(this.modal_data)
@@ -299,27 +316,32 @@ const app = new Vue({
                 case 'breakfast':
                     this.modal_data.push(this.breakfast_meals[serv_index].org_index);
                     this.modal_data.push('breakfast');
-                    this.modal_servings = this.modal_data[0].servings
+                    this.modal_servings = this.meals[this.modal_data[0]].servings
                     break;
-                case 'snack1':
+                    case 'snack1':
                     this.modal_data.push(this.snack1_meals[serv_index].org_index);
                     this.modal_data.push('snack1');
+                    this.modal_servings = this.meals[this.modal_data[0]].servings
                     break;
-                case 'lunch':
+                    case 'lunch':
                     this.modal_data.push(this.lunch_meals[serv_index].org_index);
                     this.modal_data.push('lunch');
+                    this.modal_servings = this.meals[this.modal_data[0]].servings
                     break;
-                case 'snack2':
+                    case 'snack2':
                     this.modal_data.push(this.snack2_meals[serv_index].org_index);
                     this.modal_data.push('snack2');
+                    this.modal_servings = this.meals[this.modal_data[0]].servings
                     break;
-                case 'dinner':
+                    case 'dinner':
                     this.modal_data.push(this.dinner_meals[serv_index].org_index);
                     this.modal_data.push('dinner');
+                    this.modal_servings = this.meals[this.modal_data[0]].servings
                     break;
-                case 'night_snack':
+                    case 'night_snack':
                     this.modal_data.push(this.night_snack_meals[serv_index].org_index);
                     this.modal_data.push('night_snack');
+                    this.modal_servings = this.meals[this.modal_data[0]].servings
                     break;
             }
             console.log('index', this.modal_data)
@@ -451,7 +473,7 @@ const app = new Vue({
                 if (hits[i].recipe.image != null) {
                     rcp.image = hits[i].recipe.image
                 } else {
-                    rcp.image = '{% static "FitAFSite/img/default_meal.jpg" %}'
+                    rcp.image = "../img/default_meal.jpg"
                 }
                 if (hits[i].recipe.totalNutrients.totalTime != null) {
                     rcp.cooktime = hits[i].recipe.totalNutrients.totalTime

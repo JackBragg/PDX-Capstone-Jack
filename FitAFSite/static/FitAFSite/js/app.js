@@ -245,6 +245,11 @@ const app = new Vue({
             return temp
         },
 
+        addRecipe: async function() {
+            // add recipe modal, if macros are left out then send through automated macro filter
+            
+        },
+
         getOwner: async function() {
             const response = await axios.get('api/user/')
             // console.log('users api call', response)

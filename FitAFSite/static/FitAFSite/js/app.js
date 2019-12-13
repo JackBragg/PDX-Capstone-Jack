@@ -21,8 +21,10 @@ class Recipe {
         this.title = ''
         this.url = ''
         this.image = ''
+        this.meal_calories = 1
         this.calories = 1
         this.cooktime = 0
+        this.meal_servings = 1
         this.servings = 1
         this.fat = 0.0
         this.carb = 0.0
@@ -37,6 +39,11 @@ class Recipe {
         if ((this.calories > 0) && (this.servings > 0)){
             this.cals_consumed = Math.floor(this.calories * this.servings) 
             // console.log('eaten_cals', this.cals_consumed)    
+        } else if (this.servings){
+            // TODO
+            // I want this to create fractions of servings but that also requires
+            // calories per serving to be defined
+
         } else {
             this.cals_consumed = this.calories
             this.servings = 1
@@ -44,6 +51,17 @@ class Recipe {
         // }
         return this.cals_consumed
         
+    }
+
+    // used when importing meals with multiple servings and total cals to
+    // determine cals per serving and sub-servings
+    define_servings() {
+        this.meal_servings = this.servings
+        this.meal_calories = this.calories
+        if ((this.meal_servings > 1) && (this.meal_calories > 0)) {
+            this.servings = 1
+            this.calories = Math.floor(this.meal_calories / this.meal_servings)
+        }
     }
     
 };

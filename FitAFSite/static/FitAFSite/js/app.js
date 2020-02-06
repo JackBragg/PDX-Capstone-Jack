@@ -444,21 +444,26 @@ const app = new Vue({
         food_search: async function() {
             // var use_NLP = '?nutrition-type=logging&'
             this.loading = true
-            this.meal_search = this.meal_search.toLowerCase()
-            var ingr = this.meal_search.split(' ')
-            // console.log('food search ingr1', ingr)
-            ingr = '?ingr=' + ingr.join('%20')
-            // console.log('food search ingr2', ingr)
-            // get = this.food_api + use_NLP + ingr + this.app_id + this.app_key
-            get = this.food_api + ingr + this.food_app_id + this.food_app_key
-            // console.log('food search get', get)
-            const response = await axios.get(get)
-            // console.log('food search response', response)
-            this.search_results = response.data.hints
+            if (this.meal_search != null) {
+                this.meal_search = this.meal_search.toLowerCase()
+                var ingr = this.meal_search.split(' ')
+                this.meal_search = ''
+                // console.log('food search ingr1', ingr)
+                ingr = '?ingr=' + ingr.join('%20')
+                // console.log('food search ingr2', ingr)
+                // get = this.food_api + use_NLP + ingr + this.app_id + this.app_key
+                get = this.food_api + ingr + this.food_app_id + this.food_app_key
+                // console.log('food search get', get)
+                const response = await axios.get(get)
+                // console.log('food search response', response)
+                this.search_results = response.data.hints
+                // this.search_results = response
+            } else {
+                console.log('food_search done')        
+            }
             this.loading = false
-            // this.search_results = response
-        },
-
+            },
+            
         search_modal_handler: function(meal_time) {
             this.set_add_meal_modal_data(meal_time)
             this.sugg_add_meal()
